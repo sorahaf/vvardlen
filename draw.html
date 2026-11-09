@@ -1,0 +1,1487 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#fffaf1">
+<meta name="description" content="สมุดวาดรูปออนไลน์ เส้นที่วาดจะขยับได้เอง มีดินสอ เส้นพิกเซล และเส้นหยัก เลือกกระดาษได้หลายแบบ">
+<title>กระดานวาด | ยุกยิก</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mali:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#ece4d6; --panel:#fffaf1; --ink:#2a2420; --muted:#8c8071; --line:#e4d8c5;
+  --accent:#ff5a36; --accent-soft:#ffe6dc; --chip:#f4ecdf;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);font-family:'Mali',system-ui,sans-serif;color:var(--ink);
+  -webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+button{font:inherit;color:inherit}
+.app{display:flex;height:100vh;height:100dvh}
+
+/* ---------- panel ---------- */
+.panel{width:280px;flex:none;background:var(--panel);border-right:1.5px solid var(--line);display:flex;flex-direction:column;
+  overflow-y:auto;padding:18px 16px 22px;gap:18px;scrollbar-width:thin}
+.brand{display:flex;align-items:center;gap:10px;color:inherit;text-decoration:none;border-radius:14px}
+.brand:hover small{color:var(--accent)}
+.brand svg{width:44px;height:44px;flex:none}
+.brand h1{font-size:23px;margin:0;font-weight:700;line-height:1.1}
+.brand small{display:block;color:var(--muted);font-size:12px;font-weight:400;margin-top:2px}
+section h2{font-size:12px;font-weight:600;color:var(--muted);margin:0 0 8px;letter-spacing:.04em}
+
+.brushes{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tool{border:1.5px solid var(--line);background:#fff;border-radius:14px;padding:8px 6px 6px;cursor:pointer;display:flex;flex-direction:column;
+  align-items:center;gap:3px;font-size:13px;transition:border-color .15s, transform .15s, box-shadow .15s}
+.tool svg{width:100%;height:28px;overflow:visible}
+.tool:hover{border-color:#c9b79c}
+.tool.on{border-color:var(--ink);background:var(--accent-soft);box-shadow:2px 2px 0 var(--ink);transform:translate(-1px,-1px)}
+.tool.on svg{animation:boil .36s steps(1) infinite}
+.tool kbd{font-family:inherit;font-size:10px;color:var(--muted)}
+@keyframes boil{0%{transform:translate(0,0) rotate(0)}33%{transform:translate(.6px,-.5px) rotate(.6deg)}66%{transform:translate(-.5px,.4px) rotate(-.5deg)}}
+
+.swatches{display:grid;grid-template-columns:repeat(6,1fr);gap:7px}
+.sw{aspect-ratio:1;border-radius:50%;border:2.5px solid #fff;box-shadow:0 0 0 1.5px var(--line);cursor:pointer;padding:0;transition:transform .12s}
+.sw:hover{transform:scale(1.08)}
+.sw.on{box-shadow:0 0 0 2px var(--ink)}
+.custom{display:flex;align-items:center;gap:8px;margin-top:9px;font-size:13px;color:var(--muted)}
+.custom input{appearance:none;-webkit-appearance:none;width:34px;height:26px;border:1.5px solid var(--line);border-radius:8px;padding:0;background:none;cursor:pointer}
+.custom input::-webkit-color-swatch-wrapper{padding:2px}
+.custom input::-webkit-color-swatch{border:0;border-radius:5px}
+.custom input::-moz-color-swatch{border:0;border-radius:5px}
+
+.row{display:flex;align-items:center;justify-content:space-between;font-size:13px;margin:10px 0 3px}
+.fold-inner > .row:first-child, .fold-inner > .opt:first-child .row{margin-top:6px}
+.row output{font-variant-numeric:tabular-nums;color:var(--muted);font-size:12px}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:22px;background:transparent;margin:0;cursor:pointer}
+input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:6px;background:var(--chip);border:1px solid var(--line)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid var(--ink);margin-top:-7px;box-shadow:1.5px 1.5px 0 var(--ink)}
+input[type=range]::-moz-range-track{height:6px;border-radius:6px;background:var(--chip);border:1px solid var(--line)}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:#fff;border:2px solid var(--ink)}
+
+.seg{display:flex;background:var(--chip);border-radius:11px;padding:3px;gap:3px;margin-top:4px}
+.seg button{flex:1;border:0;background:transparent;border-radius:8px;padding:6px 2px;font-size:12.5px;cursor:pointer}
+.seg button.on{background:#fff;box-shadow:0 1px 2px rgba(60,40,20,.18);font-weight:600}
+.opt[hidden]{display:none}
+
+.papers{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px 8px}
+.paper{display:flex;flex-direction:column;align-items:stretch;gap:4px;cursor:pointer;background:none;border:0;padding:0;font-size:11px;min-width:0}
+.paper span{display:block;text-align:center;line-height:1.25;min-height:2.5em}
+.paper canvas{width:100%;aspect-ratio:1;border-radius:11px;border:1.5px solid var(--line);display:block;transition:transform .12s}
+.paper:hover canvas{transform:translateY(-1px)}
+.paper.on canvas{border-color:var(--ink);box-shadow:2px 2px 0 var(--ink)}
+.paper.on span{font-weight:600}
+
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.btn{display:flex;align-items:center;justify-content:center;gap:6px;border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:9px 8px;
+  font-size:13px;cursor:pointer;transition:border-color .15s, background .15s}
+.btn:hover{border-color:#c9b79c}
+.btn{white-space:nowrap;text-decoration:none}
+.btn[hidden]{display:none}
+.btn:disabled{opacity:.4;cursor:default}
+.btn.primary{background:var(--ink);color:#fff;border-color:var(--ink)}
+.btn.primary:hover{background:#000}
+.btn svg{width:16px;height:16px;flex:none}
+.hint{font-size:12px;color:var(--muted);line-height:1.5}
+.hint b{font-weight:600;font-size:12px}
+.hint ul{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:5px}
+.fold-head{width:100%;display:flex;align-items:center;justify-content:space-between;background:none;border:0;padding:4px 0;cursor:pointer;border-radius:8px}
+.fold-head h2{margin:0}
+.fold-head .chev{width:18px;height:18px;color:var(--muted);transition:transform .2s}
+.fold-head:hover .chev{color:var(--ink)}
+.fold.closed .chev{transform:rotate(-90deg)}
+.fold-body{display:grid;grid-template-rows:1fr;transition:grid-template-rows .25s ease}
+.fold.closed .fold-body{grid-template-rows:0fr}
+.fold-inner{overflow:hidden;min-height:0;padding:0 2px}
+.hint kbd{font-family:inherit;background:var(--chip);border:1px solid var(--line);border-radius:5px;padding:0 5px;font-size:11px}
+
+/* ---------- stage ---------- */
+.stage{flex:1;position:relative;overflow:hidden;min-height:0}
+#paper,#ink{position:absolute;inset:0;width:100%;height:100%;display:block}
+#ink{touch-action:none;cursor:none}
+.cursor{position:absolute;left:0;top:0;pointer-events:none;border-radius:50%;border:1.5px solid rgba(20,15,10,.75);
+  box-shadow:0 0 0 1px rgba(255,255,255,.8);transform:translate(-50%,-50%);display:none;z-index:3}
+.cursor.square{border-radius:2px}
+.empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;transition:opacity .4s;z-index:1}
+.empty div{text-align:center;color:rgba(60,45,30,.45);font-size:18px;line-height:1.7}
+.empty b{display:block;font-size:26px;font-weight:600}
+.empty.dark div{color:rgba(255,255,255,.45)}
+.empty.gone{opacity:0}
+
+.float{position:absolute;top:14px;right:14px;display:flex;gap:8px;z-index:4}
+.pill{display:flex;align-items:center;gap:6px;border:1.5px solid var(--ink);background:#fffaf1;border-radius:999px;padding:7px 13px;
+  font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+.pill:active{transform:translate(1px,1px);box-shadow:1px 1px 0 var(--ink)}
+.pill:disabled{opacity:.45;cursor:default}
+.pill svg{width:15px;height:15px}
+.pill.icon{padding:7px 9px}
+.only-mobile{display:none}
+
+.toast{position:absolute;left:50%;bottom:22px;transform:translate(-50%,20px);background:var(--ink);color:#fff;font-size:13px;padding:9px 16px;
+  border-radius:999px;opacity:0;transition:.25s;pointer-events:none;z-index:6;white-space:nowrap}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+.modal{position:fixed;inset:0;background:rgba(30,22,15,.55);display:none;align-items:center;justify-content:center;z-index:20;padding:20px}
+.modal.show{display:flex}
+.card{background:var(--panel);border-radius:18px;padding:18px;max-width:min(900px,96vw);max-height:92vh;display:flex;flex-direction:column;gap:12px;
+  border:1.5px solid var(--ink);box-shadow:4px 4px 0 var(--ink)}
+.card h3{margin:0;font-size:17px}
+.card img{max-width:100%;max-height:62vh;border-radius:10px;border:1.5px solid var(--line);object-fit:contain;-webkit-user-select:auto;user-select:auto;-webkit-touch-callout:default}
+.card p{margin:0;font-size:13px;color:var(--muted)}
+.card .bar{display:flex;gap:8px;justify-content:flex-end}
+
+.dock,.sheet-head,.backdrop,.color-pop{display:none}
+
+/* วาดกับเพื่อน */
+.float-left{position:absolute;top:14px;left:14px;z-index:4;display:flex}
+.pill.room.live{background:#e9f7ee}
+.pill .badge{display:inline-flex;align-items:center;gap:4px;background:var(--ink);color:#fff;border-radius:999px;padding:1px 8px 1px 6px;font-size:11.5px;margin-left:2px}
+.pill .badge[hidden]{display:none}
+.online{width:7px;height:7px;border-radius:50%;background:#35c47a;display:inline-block}
+.online.off{background:#e0a33a}
+#roomModal{z-index:40}
+.room-card{width:min(420px,94vw);overflow-y:auto}
+.room-head{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.xbtn{width:36px;height:36px;flex:none;border-radius:50%;border:1.5px solid var(--line);background:#fff;display:grid;place-items:center;cursor:pointer}
+.room-body{display:flex;flex-direction:column;gap:12px}
+.room-body[hidden]{display:none}
+.btn.big{padding:13px;font-size:15px;width:100%}
+.btn.danger{color:#b4321a;border-color:#f0c5b9}
+.or{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:12.5px}
+.or::before,.or::after{content:'';flex:1;height:1.5px;background:var(--line)}
+.join,.share{display:flex;gap:8px}
+.join input,.share input{flex:1;min-width:0;border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;font:inherit;background:#fff;color:var(--ink);
+  -webkit-user-select:text;user-select:text;outline:none}
+.join input:focus,.share input:focus{border-color:var(--ink)}
+.join input{font-size:18px;letter-spacing:.3em;text-transform:uppercase;font-weight:600;text-align:center}
+.join input::placeholder{letter-spacing:normal;font-weight:400;font-size:14px;text-transform:none}
+.share input{font-size:13px;color:var(--muted)}
+.code{font-size:40px;font-weight:700;letter-spacing:.2em;text-align:center;background:#fff;border:1.5px dashed var(--ink);border-radius:14px;padding:6px 0 6px .2em;
+  -webkit-user-select:all;user-select:all}
+.card p.center{text-align:center}
+.member-line{display:flex;align-items:center;justify-content:center;gap:8px;font-size:14px;color:var(--ink)}
+.join[hidden]{display:none}
+.join input#keyInput{letter-spacing:.2em}
+.room-name b{color:var(--ink);font-size:16px}
+.tag{display:inline-block;font-size:11.5px;border-radius:999px;padding:1px 9px;background:#e8f1fb;color:#2b5d94;vertical-align:2px}
+.tag.private{background:#f6ead9;color:#8a5a1c}
+.key{color:var(--ink);letter-spacing:.15em;font-size:16px}
+.room-msg{background:#fff1ec;color:#a3361b;border-radius:10px;padding:9px 12px;font-size:13px;line-height:1.5}
+.room-msg[hidden]{display:none}
+.tool,.btn,.pill,.sw,.paper,.seg button,.dock button{touch-action:manipulation}
+
+/* แท็บเล็ต */
+@media (min-width:761px) and (max-width:1024px) and (min-height:501px){
+  .panel{width:244px;padding:14px 12px 18px;gap:16px}
+  .brand h1{font-size:20px}
+  .papers{gap:8px 6px}
+  .paper span{font-size:10.5px}
+  .actions{grid-template-columns:1fr}
+}
+
+/* มือถือ: กระดาษเต็มจอ เครื่องมือเป็นแผ่นเลื่อนขึ้นมา */
+@media (max-width:760px), (max-height:500px){
+  .app{display:block}
+  .stage{position:absolute;inset:0}
+  .panel{position:fixed;left:0;right:0;bottom:0;width:auto;max-height:80vh;max-height:80dvh;z-index:30;
+    border:1.5px solid var(--line);border-bottom:0;border-radius:22px 22px 0 0;box-shadow:0 -10px 30px rgba(40,25,10,.18);
+    padding:0 16px calc(20px + env(safe-area-inset-bottom));gap:16px;
+    transform:translateY(105%);transition:transform .3s cubic-bezier(.2,.8,.2,1);visibility:hidden}
+  .panel.open{transform:none;visibility:visible}
+  .brand{display:none}
+  .sheet-head{display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:2;background:var(--panel);
+    margin:0 -16px;padding:10px 12px 6px 18px}
+  .sheet-head .handle{position:absolute;left:50%;top:7px;transform:translateX(-50%);width:42px;height:5px;border-radius:5px;background:var(--line)}
+  .sheet-head b{font-size:16px;margin-top:8px}
+  .sheet-head button{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--line);background:#fff;display:grid;place-items:center;margin-top:6px;cursor:pointer}
+  .sheet-head svg{width:16px;height:16px}
+  .brushes{grid-template-columns:repeat(4,1fr);gap:7px}
+  .tool{padding:8px 4px 6px}
+  .tool span{font-size:11.5px;line-height:1.25;text-align:center}
+  .swatches{gap:10px}
+  .paper canvas{aspect-ratio:3/2}
+  input[type=range]{height:30px}
+  .btn{padding:11px 8px}
+  .hint{display:none}
+  .backdrop{display:block;position:fixed;inset:0;background:rgba(30,20,10,.28);z-index:29;opacity:0;pointer-events:none;transition:opacity .25s}
+  .backdrop.show{opacity:1;pointer-events:auto}
+  .only-mobile{display:flex}
+  .float{top:calc(10px + env(safe-area-inset-top));right:calc(10px + env(safe-area-inset-right));gap:6px}
+  .float-left{top:calc(10px + env(safe-area-inset-top));left:calc(10px + env(safe-area-inset-left))}
+  .float-left .pill .lbl{display:inline}
+  .code{font-size:34px}
+  .pill{padding:9px 11px}
+  .pill .lbl{display:none}
+  .dock{display:flex;position:absolute;left:50%;bottom:calc(14px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:5;
+    background:var(--panel);border:1.5px solid var(--ink);border-radius:999px;box-shadow:2px 2px 0 var(--ink);padding:5px;gap:3px;align-items:center}
+  .dock button{width:46px;height:46px;border-radius:50%;border:0;background:transparent;display:grid;place-items:center;cursor:pointer;padding:0}
+  .dock button.on{background:var(--accent-soft);box-shadow:inset 0 0 0 1.5px var(--ink)}
+  .dock button svg{width:32px;height:16px;overflow:visible}
+  .dock .gear svg{width:20px;height:20px}
+  .dock .sep{width:1.5px;align-self:stretch;background:var(--line);margin:8px 3px}
+  .dock .cdot{width:26px;height:26px;border-radius:50%;box-shadow:0 0 0 2px #fff,0 0 0 3.5px var(--ink)}
+  .empty div{font-size:15px;padding:0 28px;margin-bottom:60px}
+  .empty b{font-size:21px}
+  .toast{bottom:calc(86px + env(safe-area-inset-bottom));white-space:normal;text-align:center;max-width:88vw}
+}
+@media (max-width:760px), (max-height:500px){
+  .color-pop{display:block;position:absolute;left:50%;bottom:calc(84px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:6;
+    width:min(316px,92vw);background:var(--panel);border:1.5px solid var(--ink);border-radius:18px;box-shadow:2px 2px 0 var(--ink);padding:14px}
+  .color-pop[hidden]{display:none}
+  .color-pop .swatches{gap:10px}
+}
+@media (max-height:500px) and (orientation:landscape){
+  .color-pop{left:calc(76px + env(safe-area-inset-left));top:50%;bottom:auto;transform:translateY(-50%);width:280px}
+}
+@media (max-width:360px){
+  .dock button{width:40px;height:40px}
+  .dock button svg{width:27px}
+}
+
+/* มือถือแนวนอน: เครื่องมือเลื่อนออกมาจากด้านขวา */
+@media (max-height:500px) and (orientation:landscape){
+  .panel{top:0;left:auto;right:0;bottom:0;width:min(340px,58vw);max-height:none;border-radius:22px 0 0 22px;border:1.5px solid var(--line);border-right:0;
+    transform:translateX(105%);padding:0 calc(16px + env(safe-area-inset-right)) 16px 16px}
+  .sheet-head{margin:0 calc(-16px - env(safe-area-inset-right)) 0 -16px}
+  .sheet-head .handle{display:none}
+  .sheet-head b,.sheet-head button{margin-top:2px}
+  .brushes{grid-template-columns:1fr 1fr}
+  .dock{left:calc(12px + env(safe-area-inset-left));top:50%;bottom:auto;transform:translateY(-50%);flex-direction:column}
+  .dock button{width:42px;height:42px}
+  .dock .sep{width:auto;height:1.5px;align-self:stretch;margin:3px 8px}
+  .empty div{margin:0}
+  .toast{bottom:calc(14px + env(safe-area-inset-bottom))}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="panel" id="panel" aria-label="เครื่องมือ">
+    <div class="sheet-head"><span class="handle"></span><b>เครื่องมือ</b><button id="closeSheet" aria-label="ปิด"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4l8 8M12 4l-8 8"/></svg></button></div>
+    <a class="brand" href="./" title="กลับหน้ารวมห้อง">
+      <svg viewBox="0 0 44 44" aria-hidden="true">
+        <rect x="2" y="2" width="40" height="40" rx="12" fill="#ff5a36"/>
+        <path class="logo-line" d="M9 27 C14 15, 19 31, 23 21 S31 12, 35 19" fill="none" stroke="#fffaf1" stroke-width="3.4" stroke-linecap="round"/>
+      </svg>
+      <div><h1>ยุกยิก</h1><small>กลับหน้ารวมห้อง</small></div>
+    </a>
+
+    <section>
+      <h2>เลือกแปรง</h2>
+      <div class="brushes" id="brushes">
+        <button class="tool on" data-brush="pencil" title="ดินสอยุกยิก (1)">
+          <svg viewBox="0 0 80 28"><path d="M6 18 C14 7, 22 23, 32 13 S50 7, 58 15 S70 21, 74 11" fill="none" stroke="#2a2420" stroke-width="3" stroke-linecap="round"/><path d="M7 19.5 C15 9, 23 24, 33 14.5 S50 9, 59 16.5 S70 22, 73 13" fill="none" stroke="#2a2420" stroke-opacity=".35" stroke-width="1.4" stroke-linecap="round"/></svg>
+          <span>ดินสอยุกยิก</span>
+        </button>
+        <button class="tool" data-brush="pixel" title="เส้นพิกเซล (2)">
+          <svg viewBox="0 0 80 28" shape-rendering="crispEdges" fill="#2a2420"><rect x="6" y="18" width="5" height="5"/><rect x="11" y="18" width="5" height="5"/><rect x="16" y="13" width="5" height="5"/><rect x="21" y="13" width="5" height="5"/><rect x="26" y="8" width="5" height="5"/><rect x="31" y="8" width="5" height="5"/><rect x="36" y="8" width="5" height="5"/><rect x="41" y="13" width="5" height="5"/><rect x="46" y="18" width="5" height="5"/><rect x="51" y="18" width="5" height="5"/><rect x="56" y="13" width="5" height="5"/><rect x="61" y="8" width="5" height="5"/><rect x="66" y="8" width="5" height="5"/></svg>
+          <span>เส้นพิกเซล</span>
+        </button>
+        <button class="tool" data-brush="wave" title="เส้นหยัก (3)">
+          <svg viewBox="0 0 80 28"><path d="M6 14 L11 6 L17 22 L23 6 L29 22 L35 6 L41 22 L47 6 L53 22 L59 6 L65 22 L71 6 L74 11" fill="none" stroke="#2a2420" stroke-width="2.6" stroke-linejoin="miter" stroke-linecap="round"/></svg>
+          <span>เส้นหยัก</span>
+        </button>
+        <button class="tool" data-brush="eraser" title="ยางลบ (4)">
+          <svg viewBox="0 0 80 28"><g transform="rotate(-18 40 14)"><rect x="24" y="7" width="32" height="14" rx="3" fill="#ffb3a3" stroke="#2a2420" stroke-width="2"/><rect x="24" y="7" width="11" height="14" rx="3" fill="#fff" stroke="#2a2420" stroke-width="2"/></g></svg>
+          <span>ยางลบ</span>
+        </button>
+      </div>
+    </section>
+
+    <section id="colorSec">
+      <h2>สีเส้น</h2>
+      <div class="swatches" id="swatches"></div>
+      <label class="custom">เลือกสีเอง <input type="color" id="customColor" value="#2a2420"></label>
+    </section>
+
+    <section class="fold" id="foldSec">
+      <button class="fold-head" id="foldBtn" aria-expanded="true">
+        <h2>ปรับเส้น</h2>
+        <svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 6 4 4 4-4"/></svg>
+      </button>
+      <div class="fold-body"><div class="fold-inner">
+      <div class="row"><span>ความหนาของเส้น</span><output id="sizeOut">4</output></div>
+      <input type="range" id="size" min="1" max="30" step="1" value="4">
+
+      <div class="opt" data-for="pencil pixel">
+        <div class="row"><span>เส้นสั่นมากแค่ไหน</span><output id="wiggleOut">2.2</output></div>
+        <input type="range" id="wiggle" min="0" max="6" step="0.1" value="2.2">
+      </div>
+
+      <div class="opt" data-for="pixel" hidden>
+        <div class="row"><span>ขนาดเม็ดพิกเซล</span><output id="pixelOut">6</output></div>
+        <input type="range" id="pixel" min="3" max="20" step="1" value="6">
+      </div>
+
+      <div class="opt" data-for="wave" hidden>
+        <div class="row"><span>ลายหยัก</span></div>
+        <div class="seg" id="shapeSeg">
+          <button data-shape="zigzag" class="on">ฟันเลื่อย</button>
+          <button data-shape="sine">คลื่น</button>
+          <button data-shape="coil">ขดสปริง</button>
+        </div>
+        <div class="row"><span>หยักสูงแค่ไหน</span><output id="ampOut">7</output></div>
+        <input type="range" id="amp" min="2" max="26" step="1" value="7">
+        <div class="row"><span>หยักถี่หรือห่าง</span><output id="wavelenOut">18</output></div>
+        <input type="range" id="wavelen" min="6" max="60" step="1" value="18">
+      </div>
+
+      <div class="row"><span>เส้นขยับเร็วแค่ไหน</span><output id="fpsOut">10</output></div>
+      <input type="range" id="fps" min="2" max="24" step="1" value="10">
+      </div></div>
+    </section>
+
+    <section>
+      <h2>เลือกกระดาษ</h2>
+      <div class="papers" id="papers"></div>
+    </section>
+
+    <section>
+      <div class="actions">
+        <button class="btn" id="undoBtn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3 2 6l3 3"/><path d="M2 6h7.5a4 4 0 0 1 0 8H6"/></svg>ย้อนกลับ</button>
+        <button class="btn" id="redoBtn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m11 3 3 3-3 3"/><path d="M14 6H6.5a4 4 0 0 0 0 8H10"/></svg>ทำซ้ำ</button>
+        <button class="btn" id="clearBtn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 4h11M6 4V2.5h4V4M4 4l.7 9.5h6.6L12 4"/></svg>ล้างกระดาษ</button>
+        <button class="btn primary" id="saveBtn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v8M4.5 6.5 8 10l3.5-3.5M2.5 13.5h11"/></svg>บันทึกรูป</button>
+      </div>
+    </section>
+
+    <div class="hint">
+      <b>ปุ่มลัดบนคีย์บอร์ด</b>
+      <ul>
+        <li><kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> <kbd>4</kbd> เลือกแปรง</li>
+        <li><kbd>[</kbd> <kbd>]</kbd> เส้นบางลง หรือหนาขึ้น</li>
+        <li><kbd>Space</kbd> หยุดหรือเล่นเส้น</li>
+        <li><kbd>Ctrl</kbd> + <kbd>Z</kbd> ย้อนกลับ</li>
+        <li><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Z</kbd> ทำซ้ำ</li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="stage" id="stage">
+    <canvas id="paper"></canvas>
+    <canvas id="ink"></canvas>
+    <div class="empty" id="empty"><div><b>ลองลากวาดดูเลย</b>เส้นที่วาดจะขยับได้เอง</div></div>
+    <div class="cursor" id="cursor"></div>
+    <div class="float-left">
+      <button class="pill room" id="roomBtn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="6" cy="5.5" r="2.3"/><path d="M1.8 13.5c.4-2.4 2.1-3.8 4.2-3.8s3.8 1.4 4.2 3.8"/><circle cx="11.3" cy="5" r="1.8"/><path d="M11.6 9.3c1.5.2 2.4 1.4 2.7 3.2"/></svg><span class="lbl" id="roomLbl">วาดกับเพื่อน</span><span class="badge" id="roomBadge" hidden><i class="online" id="roomDot"></i><span id="roomCount">1</span></span></button>
+    </div>
+    <div class="float">
+      <button class="pill icon only-mobile" id="mUndo" title="ย้อนกลับ" aria-label="ย้อนกลับ"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3 2 6l3 3"/><path d="M2 6h7.5a4 4 0 0 1 0 8H6"/></svg></button>
+      <button class="pill icon only-mobile" id="mRedo" title="ทำซ้ำ" aria-label="ทำซ้ำ"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m11 3 3 3-3 3"/><path d="M14 6H6.5a4 4 0 0 0 0 8H10"/></svg></button>
+      <button class="pill" id="playBtn"></button>
+    </div>
+    <nav class="dock" id="dock" aria-label="แปรงด่วน">
+      <span class="sep"></span>
+      <button id="dockColor" aria-label="เลือกสี"><span class="cdot" id="cdot"></span></button>
+      <button class="gear" id="dockMore" aria-label="เครื่องมือทั้งหมด"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 5.5h8M15 5.5h2M3 14.5h2M9 14.5h8"/><circle cx="13" cy="5.5" r="2"/><circle cx="7" cy="14.5" r="2"/></svg></button>
+    </nav>
+    <div class="color-pop" id="colorPop" hidden>
+      <div class="swatches" id="popSwatches"></div>
+      <label class="custom">เลือกสีเอง <input type="color" id="popCustom" value="#2a2420"></label>
+    </div>
+    <div class="toast" id="toast"></div>
+  </main>
+</div>
+
+<div class="backdrop" id="backdrop"></div>
+<div class="modal" id="roomModal" role="dialog" aria-labelledby="roomTitle">
+  <div class="card room-card">
+    <div class="room-head"><h3 id="roomTitle">วาดกับเพื่อน</h3><button class="xbtn" id="roomClose" aria-label="ปิด"><svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4l8 8M12 4l-8 8"/></svg></button></div>
+    <div class="room-body" id="roomLobby">
+      <p>วาดบนกระดาษแผ่นเดียวกันกับเพื่อนได้ ห้องละ 2 คน ทุกห้องจะหายเองเมื่อครบ 3 วัน</p>
+      <a class="btn primary big" id="toLobby" href="./">ดูห้องทั้งหมด หรือสร้างห้องใหม่</a>
+      <div class="or">หรือมีรหัสห้องแล้ว</div>
+      <form class="join" id="joinForm" autocomplete="off">
+        <input id="codeInput" maxlength="6" placeholder="รหัสห้อง 6 ตัว" inputmode="text" autocapitalize="characters" spellcheck="false" aria-label="รหัสห้อง">
+        <button class="btn" type="submit" id="joinBtn">เข้าห้อง</button>
+      </form>
+      <form class="join" id="keyForm" autocomplete="off" hidden>
+        <input id="keyInput" maxlength="6" placeholder="รหัสผ่านห้องส่วนตัว" autocapitalize="characters" spellcheck="false" aria-label="รหัสผ่าน">
+      </form>
+    </div>
+    <div class="room-body" id="roomIn" hidden>
+      <p class="center room-name"><b id="roomName"></b> <span class="tag" id="roomTag"></span></p>
+      <div class="code" id="codeBig"></div>
+      <p class="center" id="keyLine" hidden>รหัสผ่าน <b class="key" id="keyBig"></b></p>
+      <div class="member-line"><i class="online" id="memberDot"></i><span id="memberText"></span></div>
+      <div class="share"><input id="shareLink" readonly aria-label="ลิงก์ห้อง"><button class="btn" id="copyLink">คัดลอกลิงก์</button></div>
+      <p id="expireText"></p>
+      <p>รูปในห้องนี้แยกจากรูปที่คุณวาดคนเดียว ออกจากห้องเมื่อไหร่ รูปเดิมของคุณจะกลับมา</p>
+      <button class="btn danger" id="leaveRoom">ออกจากห้อง</button>
+    </div>
+    <div class="room-msg" id="roomMsg" hidden></div>
+  </div>
+</div>
+<div class="modal" id="modal">
+  <div class="card">
+    <h3>รูปของคุณพร้อมแล้ว</h3>
+    <img id="outImg" alt="รูปที่วาด">
+    <p>บนคอม: คลิกขวาที่รูป แล้วเลือก “บันทึกรูปภาพ”<br>บนมือถือ: กดค้างที่รูป แล้วเลือก “บันทึกรูปภาพ”</p>
+    <div class="bar">
+      <button class="btn" id="copyImg">คัดลอกรูป</button>
+      <a class="btn" id="dlBtn" download="yukyik.png" href="#" hidden>ดาวน์โหลด</a>
+      <button class="btn primary" id="closeModal">ปิด</button>
+    </div>
+  </div>
+</div>
+
+<script src="firebase-config.js"></script>
+<script>
+(() => {
+'use strict';
+const $ = s => document.querySelector(s);
+const stage = $('#stage'), paperC = $('#paper'), inkC = $('#ink');
+const pctx = paperC.getContext('2d');
+const ctx = inkC.getContext('2d');
+let W = 0, H = 0, DPR = 1;
+
+const BOIL = 3;          // จำนวนเฟรมของการสั่นแบบ "line boil"
+const WAVE_FRAMES = 12;  // จำนวนเฟรมของคลื่นที่วิ่ง (วนลูป)
+
+const state = {
+  brush:'pencil', color:'#2a2420', size:4, wiggle:2.2, pixel:6,
+  amp:7, wavelen:18, shape:'zigzag', fps:10, playing:true, paper:'plain'
+};
+let strokes = [], undoStack = [], redoStack = [];
+// ในห้องวาดกับเพื่อน ทุกเครื่องเห็นกระดาษสี่เหลี่ยมจัตุรัสแผ่นเดียวกัน (BOARD x BOARD หน่วย) ย่อขยายให้พอดีจอ
+const BOARD = 1000;
+let VS = 1, OX = 0, OY = 0;
+const room = {active:false, code:null, slot:null, uid:null, fb:null, db:null, unsubs:[], live:new Map(),
+  myUndo:[], myRedo:[], solo:null, meta:null, key:null, expireTimer:null, dropTimer:null, members:0, connected:false, lastLive:0, liveTimer:null, busy:false};
+let current = null, raw = null, activeId = null;
+let dirty = true;
+
+/* ---------- utils ---------- */
+function hash(a, b, c){
+  let h = Math.imul(a|0, 374761393) ^ Math.imul((b|0) + 1013, 668265263) ^ Math.imul((c|0) + 7919, 1274126177);
+  h = Math.imul(h ^ (h >>> 13), 1103515245);
+  h ^= h >>> 16;
+  h = Math.imul(h, 2246822519);
+  h ^= h >>> 13;
+  return (h >>> 0) / 4294967296;
+}
+function mulberry(a){ return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+
+function smooth(pts){
+  if (pts.length < 3) return pts.slice();
+  const out = [pts[0]];
+  for (let i = 1; i < pts.length - 1; i++){
+    const a = pts[i-1], b = pts[i], c = pts[i+1];
+    out.push({x:(a.x + b.x*2 + c.x)/4, y:(a.y + b.y*2 + c.y)/4});
+  }
+  out.push(pts[pts.length-1]);
+  return out;
+}
+function resample(pts, step){
+  if (!pts.length) return [];
+  if (pts.length === 1) return [{x:pts[0].x, y:pts[0].y}, {x:pts[0].x + .3, y:pts[0].y + .1}];
+  const out = [{x:pts[0].x, y:pts[0].y}];
+  let prev = {x:pts[0].x, y:pts[0].y}, acc = 0;
+  for (let i = 1; i < pts.length; i++){
+    const p = pts[i];
+    let d = Math.hypot(p.x - prev.x, p.y - prev.y);
+    while (acc + d >= step && d > 0){
+      const t = (step - acc) / d;
+      const n = {x:prev.x + (p.x - prev.x)*t, y:prev.y + (p.y - prev.y)*t};
+      out.push(n); prev = n; acc = 0;
+      d = Math.hypot(p.x - prev.x, p.y - prev.y);
+    }
+    acc += d; prev = {x:p.x, y:p.y};
+  }
+  const last = pts[pts.length-1];
+  if (acc > step*0.25 || out.length < 2) out.push({x:last.x, y:last.y});
+  return out;
+}
+function jitter(pts, amp, seed, v, K){
+  const n = pts.length, out = new Array(n);
+  if (amp <= 0) return pts;
+  const nc = Math.ceil(n / K) + 2, ox = new Float32Array(nc), oy = new Float32Array(nc);
+  for (let j = 0; j < nc; j++){
+    ox[j] = (hash(seed, j, v*2+1)*2 - 1) * amp;
+    oy[j] = (hash(seed, j, v*2+2)*2 - 1) * amp;
+  }
+  for (let i = 0; i < n; i++){
+    const f = i / K, j = Math.floor(f), t = f - j, s = t*t*(3 - 2*t);
+    const dx = ox[j] + (ox[j+1] - ox[j])*s + (hash(seed + 7, i, v) - .5) * amp * .3;
+    const dy = oy[j] + (oy[j+1] - oy[j])*s + (hash(seed + 13, i, v) - .5) * amp * .3;
+    out[i] = {x:pts[i].x + dx, y:pts[i].y + dy};
+  }
+  return out;
+}
+function curvePath(p){
+  const path = new Path2D();
+  path.moveTo(p[0].x, p[0].y);
+  if (p.length < 3){ for (let i = 1; i < p.length; i++) path.lineTo(p[i].x, p[i].y); return path; }
+  for (let i = 1; i < p.length - 1; i++){
+    const mx = (p[i].x + p[i+1].x)/2, my = (p[i].y + p[i+1].y)/2;
+    path.quadraticCurveTo(p[i].x, p[i].y, mx, my);
+  }
+  const l = p[p.length-1]; path.lineTo(l.x, l.y);
+  return path;
+}
+
+/* ---------- pencil grain ---------- */
+const grainCache = new Map();
+function grain(color){
+  let pat = grainCache.get(color);
+  if (pat) return pat;
+  if (grainCache.size > 48) grainCache.delete(grainCache.keys().next().value);   // ลากเลือกสีเองจะได้ไม่สะสมไม่รู้จบ
+  const c = document.createElement('canvas'); c.width = c.height = 128;
+  const g = c.getContext('2d');
+  g.fillStyle = color; g.fillRect(0, 0, 128, 128);
+  const id = g.getImageData(0, 0, 128, 128), d = id.data, rnd = mulberry(42);
+  for (let i = 0; i < d.length; i += 4){
+    const r = rnd();
+    d[i+3] = r < .14 ? 50 + rnd()*40 : 165 + rnd()*90;
+  }
+  g.putImageData(id, 0, 0);
+  pat = ctx.createPattern(c, 'repeat');
+  grainCache.set(color, pat);
+  return pat;
+}
+
+/* ---------- geometry builders ---------- */
+function buildPencil(s, v){
+  const amp = s.wiggle * (0.55 + s.size * 0.07);
+  const main = jitter(s.pts, amp, s.seed, v, 7);
+  const ghost = jitter(s.pts, amp * 1.25 + .4, s.seed + 101, v, 6);
+  return {main:curvePath(main), ghost:curvePath(ghost)};
+}
+function buildPixel(s, v){
+  const cell = s.pixel;
+  const t = Math.max(1, Math.round(s.size / cell));
+  const off = Math.floor((t - 1) / 2);
+  const jp = jitter(s.pts, s.wiggle * cell * 0.25, s.seed, v, 5);
+  const seen = new Set(), path = new Path2D();
+  const stamp = (cx, cy) => {
+    for (let dx = 0; dx < t; dx++) for (let dy = 0; dy < t; dy++){
+      const X = cx + dx - off, Y = cy + dy - off, k = X + ',' + Y;
+      if (!seen.has(k)){ seen.add(k); path.rect(X*cell, Y*cell, cell, cell); }
+    }
+  };
+  let px = null, py = null;
+  for (const p of jp){
+    const cx = Math.floor(p.x / cell), cy = Math.floor(p.y / cell);
+    if (px === null){ stamp(cx, cy); }
+    else if (cx !== px || cy !== py){
+      // Bresenham
+      let x0 = px, y0 = py; const dx = Math.abs(cx - x0), dy = -Math.abs(cy - y0);
+      const sx = x0 < cx ? 1 : -1, sy = y0 < cy ? 1 : -1; let err = dx + dy;
+      while (true){
+        stamp(x0, y0);
+        if (x0 === cx && y0 === cy) break;
+        const e2 = 2*err;
+        if (e2 >= dy){ err += dy; x0 += sx; }
+        if (e2 <= dx){ err += dx; y0 += sy; }
+      }
+    }
+    px = cx; py = cy;
+  }
+  return {fill:path};
+}
+function buildWave(s, f){
+  const p = s.wpts, n = p.length, path = new Path2D();
+  const L = (n - 1);              // wpts resampled at 1px
+  const phase = f / WAVE_FRAMES * Math.PI * 2;
+  const k = Math.PI * 2 / s.wavelen;
+  const taperLen = Math.min(12, s.wavelen * .6);
+  for (let i = 0; i < n; i++){
+    const a = p[Math.max(0, i - 3)], b = p[Math.min(n - 1, i + 3)];
+    let tx = b.x - a.x, ty = b.y - a.y; const len = Math.hypot(tx, ty) || 1; tx /= len; ty /= len;
+    const nx = -ty, ny = tx;
+    const taper = Math.max(0, Math.min(1, i / taperLen, (L - i) / taperLen));
+    const th = i * k - phase;
+    let on = 0, ot = 0;
+    if (s.shape === 'zigzag') on = (2 / Math.PI) * Math.asin(Math.sin(th));
+    else if (s.shape === 'sine') on = Math.sin(th);
+    else { on = Math.sin(th); ot = Math.cos(th) * .9; }
+    const A = s.amp * taper;
+    const x = p[i].x + nx*on*A + tx*ot*A, y = p[i].y + ny*on*A + ty*ot*A;
+    if (i === 0) path.moveTo(x, y); else path.lineTo(x, y);
+  }
+  return {main:path};
+}
+function buildEraser(s){ return {main:curvePath(s.pts)}; }
+
+function geom(s, bf, wf, live){
+  const key = s.type === 'wave' ? 'w' + wf : (s.type === 'eraser' ? 'e' : 'b' + bf);
+  if (!live && s.cache[key]) return s.cache[key];
+  let g;
+  if (s.type === 'pencil') g = buildPencil(s, bf);
+  else if (s.type === 'pixel') g = buildPixel(s, bf);
+  else if (s.type === 'wave') g = buildWave(s, wf);
+  else g = buildEraser(s);
+  if (!live) s.cache[key] = g;
+  return g;
+}
+
+/* ---------- render ---------- */
+let bf = 0, wf = 0;
+function drawStroke(s, live){
+  const g = geom(s, bf, wf, live);
+  ctx.save();
+  ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  switch (s.type){
+    case 'pencil': {
+      const pat = grain(s.color);
+      if (pat.setTransform) pat.setTransform(new DOMMatrix().translateSelf(bf*37, bf*23).scaleSelf(1/(DPR*VS), 1/(DPR*VS)));
+      ctx.strokeStyle = pat;
+      ctx.lineWidth = s.size; ctx.stroke(g.main);
+      ctx.globalAlpha = .42; ctx.lineWidth = Math.max(.8, s.size * .5); ctx.stroke(g.ghost);
+      break;
+    }
+    case 'pixel':
+      ctx.fillStyle = s.color; ctx.fill(g.fill); break;
+    case 'wave':
+      ctx.strokeStyle = s.color; ctx.lineWidth = s.size;
+      if (s.shape === 'zigzag'){ ctx.lineJoin = 'miter'; ctx.miterLimit = 3; }
+      ctx.stroke(g.main); break;
+    case 'eraser':
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.strokeStyle = '#000'; ctx.lineWidth = s.size; ctx.stroke(g.main); break;
+  }
+  ctx.restore();
+}
+function render(){
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.clearRect(0, 0, inkC.width, inkC.height);
+  ctx.setTransform(DPR*VS, 0, 0, DPR*VS, DPR*OX, DPR*OY);
+  if (room.active){ ctx.save(); ctx.beginPath(); ctx.rect(0, 0, BOARD, BOARD); ctx.clip(); }
+  for (const s of strokes) drawStroke(s, false);
+  if (room.active) for (const s of room.live.values()) drawStroke(s, true);
+  if (current) drawStroke(current, true);
+  if (room.active){
+    ctx.restore();
+    // หรี่พื้นที่นอกกระดาษของห้อง และตีกรอบให้เห็นขอบ
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    const bw = BOARD*VS;
+    ctx.beginPath(); ctx.rect(0, 0, W, H); ctx.rect(OX, OY, bw, bw);
+    ctx.fillStyle = PAPERS[state.paper].dark ? 'rgba(0,0,0,.35)' : 'rgba(60,40,20,.13)';
+    ctx.fill('evenodd');
+    ctx.strokeStyle = PAPERS[state.paper].dark ? 'rgba(255,255,255,.35)' : 'rgba(42,36,32,.35)';
+    ctx.setLineDash([6, 5]); ctx.lineWidth = 1.2; ctx.strokeRect(OX + .5, OY + .5, bw - 1, bw - 1); ctx.setLineDash([]);
+  }
+}
+let lastKey = '';
+function loop(now){
+  requestAnimationFrame(loop);
+  if (state.playing){
+    const t = now / 1000;
+    bf = Math.floor(t * state.fps) % BOIL;
+    wf = Math.floor(t * state.fps * 2) % WAVE_FRAMES;
+  }
+  const key = bf + '|' + wf;
+  if (dirty || key !== lastKey){
+    try { render(); } catch (err) { console.error(err); }
+    lastKey = key; dirty = false;
+  }
+}
+
+/* ---------- papers ---------- */
+const noiseTiles = {};
+function noisePattern(g, name, alpha, light){
+  const id = name + alpha + light;
+  if (!noiseTiles[id]){
+    const c = document.createElement('canvas'); c.width = c.height = 160;
+    const x = c.getContext('2d'), im = x.createImageData(160, 160), d = im.data, r = mulberry(7);
+    for (let i = 0; i < d.length; i += 4){
+      const v = light ? 255 : 0; d[i] = d[i+1] = d[i+2] = v; d[i+3] = r() * alpha * 255;
+    }
+    x.putImageData(im, 0, 0); noiseTiles[id] = c;
+  }
+  return g.createPattern(noiseTiles[id], 'repeat');
+}
+function grainFill(g, w, h, alpha, light){ g.fillStyle = noisePattern(g, 'n', alpha, light); g.fillRect(0, 0, w, h); }
+function fibers(g, w, h, n, color, seed){
+  const r = mulberry(seed); g.strokeStyle = color; g.lineWidth = .7;
+  for (let i = 0; i < n; i++){
+    const x = r()*w, y = r()*h, a = r()*Math.PI*2, l = 4 + r()*14;
+    g.globalAlpha = .15 + r()*.3;
+    g.beginPath(); g.moveTo(x, y); g.quadraticCurveTo(x + Math.cos(a+.6)*l*.5, y + Math.sin(a+.6)*l*.5, x + Math.cos(a)*l, y + Math.sin(a)*l); g.stroke();
+  }
+  g.globalAlpha = 1;
+}
+function gridLines(g, w, h, step, color, lw, offX = 0, offY = 0){
+  g.strokeStyle = color; g.lineWidth = lw; g.beginPath();
+  for (let x = offX; x <= w; x += step){ g.moveTo(Math.round(x) + .5, 0); g.lineTo(Math.round(x) + .5, h); }
+  for (let y = offY; y <= h; y += step){ g.moveTo(0, Math.round(y) + .5); g.lineTo(w, Math.round(y) + .5); }
+  g.stroke();
+}
+const PAPERS = {
+  plain:{name:'ขาว', dark:false, draw(g, w, h){ g.fillStyle = '#fdfbf6'; g.fillRect(0, 0, w, h); grainFill(g, w, h, .035); }},
+  lined:{name:'สมุด', dark:false, draw(g, w, h){
+    g.fillStyle = '#fffdf5'; g.fillRect(0, 0, w, h); grainFill(g, w, h, .03);
+    g.strokeStyle = '#bcd3ea'; g.lineWidth = 1; g.beginPath();
+    for (let y = 70; y <= h; y += 30){ g.moveTo(0, y + .5); g.lineTo(w, y + .5); } g.stroke();
+    g.strokeStyle = '#f0a0a0'; g.lineWidth = 1.5; g.beginPath(); g.moveTo(62, 0); g.lineTo(62, h); g.stroke();
+  }},
+  grid:{name:'ตาราง', dark:false, draw(g, w, h){
+    g.fillStyle = '#fbfcf8'; g.fillRect(0, 0, w, h); grainFill(g, w, h, .03);
+    gridLines(g, w, h, 20, '#e2ebf1', 1); gridLines(g, w, h, 100, '#c6d7e3', 1);
+  }},
+  dots:{name:'จุด', dark:false, draw(g, w, h){
+    g.fillStyle = '#fcf9f3'; g.fillRect(0, 0, w, h); grainFill(g, w, h, .03);
+    g.fillStyle = '#c6bcae';
+    for (let y = 22; y < h; y += 22) for (let x = 22; x < w; x += 22){ g.beginPath(); g.arc(x, y, 1.3, 0, Math.PI*2); g.fill(); }
+  }},
+  kraft:{name:'คราฟท์', dark:false, draw(g, w, h){
+    g.fillStyle = '#c8a273'; g.fillRect(0, 0, w, h); grainFill(g, w, h, .09); grainFill(g, w, h, .05, true);
+    fibers(g, w, h, Math.round(w*h/900), '#8b6538', 3); fibers(g, w, h, Math.round(w*h/1800), '#ead1ae', 9);
+  }},
+  old:{name:'กระดาษเก่า', dark:false, draw(g, w, h){
+    g.fillStyle = '#f1e2c2'; g.fillRect(0, 0, w, h);
+    const rg = g.createRadialGradient(w/2, h/2, Math.min(w, h)*.25, w/2, h/2, Math.max(w, h)*.75);
+    rg.addColorStop(0, 'rgba(120,80,30,0)'); rg.addColorStop(1, 'rgba(120,80,30,.28)');
+    g.fillStyle = rg; g.fillRect(0, 0, w, h);
+    const r = mulberry(5);
+    for (let i = 0; i < Math.max(3, w*h/90000); i++){
+      const x = r()*w, y = r()*h, rad = 20 + r()*70, sg = g.createRadialGradient(x, y, 0, x, y, rad);
+      sg.addColorStop(0, 'rgba(150,100,40,.10)'); sg.addColorStop(1, 'rgba(150,100,40,0)'); g.fillStyle = sg; g.fillRect(x-rad, y-rad, rad*2, rad*2);
+    }
+    grainFill(g, w, h, .06);
+  }},
+  chalk:{name:'กระดานดำ', dark:true, draw(g, w, h){
+    g.fillStyle = '#2d3a33'; g.fillRect(0, 0, w, h);
+    const r = mulberry(11);
+    for (let i = 0; i < Math.max(4, w*h/60000); i++){
+      const x = r()*w, y = r()*h, rad = 60 + r()*160, sg = g.createRadialGradient(x, y, 0, x, y, rad);
+      sg.addColorStop(0, 'rgba(255,255,255,.045)'); sg.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = sg; g.fillRect(x-rad, y-rad, rad*2, rad*2);
+    }
+    grainFill(g, w, h, .06, true); grainFill(g, w, h, .12);
+  }},
+  blue:{name:'พิมพ์เขียว', dark:true, draw(g, w, h){
+    g.fillStyle = '#1d4f8f'; g.fillRect(0, 0, w, h); grainFill(g, w, h, .05, true);
+    gridLines(g, w, h, 20, 'rgba(255,255,255,.10)', 1); gridLines(g, w, h, 100, 'rgba(255,255,255,.24)', 1);
+  }}
+};
+function drawPaper(){
+  pctx.setTransform(1, 0, 0, 1, 0, 0);
+  pctx.clearRect(0, 0, paperC.width, paperC.height);
+  pctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  PAPERS[state.paper].draw(pctx, W, H);
+  $('#empty').classList.toggle('dark', PAPERS[state.paper].dark);
+}
+function buildPaperPicker(){
+  const wrap = $('#papers');
+  for (const [id, p] of Object.entries(PAPERS)){
+    const b = document.createElement('button'); b.className = 'paper'; b.dataset.paper = id; b.title = p.name;
+    const c = document.createElement('canvas'); c.width = c.height = 120;
+    const g = c.getContext('2d'); g.scale(.5, .5); p.draw(g, 240, 240);
+    const s = document.createElement('span'); s.textContent = p.name;
+    b.append(c, s); wrap.append(b);
+    b.addEventListener('click', () => setPaper(id));
+  }
+}
+function setPaper(id){
+  if (!PAPERS[id]) return;
+  const wasDark = PAPERS[state.paper].dark, isDark = PAPERS[id].dark;
+  state.paper = id;
+  document.querySelectorAll('.paper').forEach(b => b.classList.toggle('on', b.dataset.paper === id));
+  if (isDark && !wasDark && state.color === '#2a2420') setColor('#ffffff', true);
+  if (!isDark && wasDark && state.color === '#ffffff') setColor('#2a2420', true);
+  drawPaper(); dirty = true; save();
+}
+
+/* ---------- sizing ---------- */
+function resize(){
+  const r = stage.getBoundingClientRect();
+  W = Math.max(1, Math.round(r.width)); H = Math.max(1, Math.round(r.height));
+  DPR = Math.min(window.devicePixelRatio || 1, 2);
+  if (room.active){
+    const mobile = window.matchMedia('(max-width:760px), (max-height:500px)').matches;
+    const land = window.matchMedia('(max-height:500px) and (orientation:landscape)').matches;
+    const top = land ? 12 : 64, bottom = mobile && !land ? 86 : 14, left = land ? 76 : 12, right = land ? 64 : 12;
+    VS = Math.max(.1, Math.min((W - left - right) / BOARD, (H - top - bottom) / BOARD));
+    OX = left + ((W - left - right) - BOARD*VS) / 2;
+    OY = top + ((H - top - bottom) - BOARD*VS) / 2;
+  } else { VS = 1; OX = 0; OY = 0; }
+  for (const c of [paperC, inkC]){ c.width = Math.round(W*DPR); c.height = Math.round(H*DPR); }
+  drawPaper(); dirty = true;
+}
+new ResizeObserver(resize).observe(stage);
+
+/* ---------- input ---------- */
+function spos(e){ const r = inkC.getBoundingClientRect(); return {x:e.clientX - r.left, y:e.clientY - r.top}; }
+function pos(e){ const p = spos(e); return {x:(p.x - OX) / VS, y:(p.y - OY) / VS}; }
+function newStroke(){
+  const t = state.brush;
+  return {
+    type:t, color:state.color, size:(t === 'eraser' ? Math.max(8, state.size*3) : state.size) / VS,
+    seed:(Math.random()*1e9)|0, wiggle:state.wiggle, pixel:state.pixel / VS,
+    amp:state.amp / VS, wavelen:state.wavelen / VS, shape:state.shape, pts:[], wpts:[], cache:{}
+  };
+}
+function onBoard(s){
+  const pad = s.size + (s.amp || 0);
+  return s.pts.some(p => p.x > -pad && p.y > -pad && p.x < BOARD + pad && p.y < BOARD + pad);
+}
+function prepare(s, source){
+  s.pts = resample(source, 3);
+  if (s.type === 'wave') s.wpts = resample(s.pts, 1);
+}
+inkC.addEventListener('pointerdown', e => {
+  if (e.button > 0 || current) return;
+  e.preventDefault();
+  try { inkC.setPointerCapture(e.pointerId); } catch (_) {}
+  activeId = e.pointerId;
+  current = newStroke(); raw = [pos(e)];
+  prepare(current, raw); dirty = true;
+  moveCursor(e);
+});
+inkC.addEventListener('pointermove', e => {
+  moveCursor(e);
+  if (!current || e.pointerId !== activeId) return;
+  const evs = e.getCoalescedEvents ? e.getCoalescedEvents() : [e];
+  const list = evs.length ? evs : [e];
+  for (const ev of list){
+    const p = pos(ev), l = raw[raw.length-1];
+    if (Math.hypot(p.x - l.x, p.y - l.y) >= 1.2) raw.push(p);
+  }
+  prepare(current, smooth(raw)); dirty = true;
+  if (room.active) roomSendLive();
+});
+function finish(e){
+  if (!current || (e && e.pointerId !== activeId)) return;
+  prepare(current, smooth(raw));
+  current.cache = {};
+  if (room.active){ if (onBoard(current)) roomCommit(current); }
+  else { pushHistory(); strokes = strokes.concat([current]); }
+  current = null; raw = null; activeId = null;
+  dirty = true; updateUI(); save();
+}
+inkC.addEventListener('pointerup', finish);
+inkC.addEventListener('pointercancel', finish);
+inkC.addEventListener('lostpointercapture', finish);
+
+const cursor = $('#cursor');
+function moveCursor(e){
+  if (e.pointerType !== 'mouse'){ cursor.style.display = 'none'; return; }
+  const p = spos(e);
+  const d = state.brush === 'eraser' ? Math.max(8, state.size*3) : Math.max(4, state.size + (state.brush === 'wave' ? state.amp*2 : 0));
+  cursor.style.display = 'block';
+  cursor.style.width = cursor.style.height = d + 'px';
+  cursor.style.transform = `translate(${p.x - d/2}px, ${p.y - d/2}px)`;
+}
+inkC.addEventListener('pointerleave', () => { cursor.style.display = 'none'; });
+
+/* ---------- history ---------- */
+function pushHistory(){
+  undoStack.push(strokes);
+  if (undoStack.length > 300) undoStack.shift();
+  redoStack = [];
+}
+function undo(){ if (room.active) return roomStep(true); if (!undoStack.length) return; redoStack.push(strokes); strokes = undoStack.pop(); dirty = true; updateUI(); save(); }
+function redo(){ if (room.active) return roomStep(false); if (!redoStack.length) return; undoStack.push(strokes); strokes = redoStack.pop(); dirty = true; updateUI(); save(); }
+function clearAll(){
+  if (!strokes.length) return;
+  if (room.active) return roomClear();
+  pushHistory(); strokes = []; dirty = true; updateUI(); save();
+  toast('ล้างกระดาษแล้ว อยากได้คืนให้กด “ย้อนกลับ”');
+}
+
+/* ---------- UI ---------- */
+const SWATCHES = ['#2a2420','#ffffff','#e63946','#ff8a3d','#f4c430','#90be6d','#2a9d8f','#3a86ff','#8ecae6','#7b2cbf','#ff70a6','#7a5236'];
+function buildSwatches(){
+  for (const w of [$('#swatches'), $('#popSwatches')]){
+    for (const c of SWATCHES){
+      const b = document.createElement('button'); b.className = 'sw'; b.style.background = c; b.dataset.color = c; b.title = c;
+      b.addEventListener('click', () => { setColor(c); if (w.id === 'popSwatches') closeColorPop(); }); w.append(b);
+    }
+  }
+  $('#customColor').addEventListener('input', e => setColor(e.target.value));
+  $('#popCustom').addEventListener('input', e => setColor(e.target.value));
+}
+function setColor(c, keepBrush){
+  state.color = c.toLowerCase();
+  document.querySelectorAll('.sw').forEach(b => b.classList.toggle('on', b.dataset.color === state.color));
+  $('#customColor').value = state.color.length === 7 ? state.color : '#000000';
+  $('#cdot').style.background = state.color;
+  $('#popCustom').value = $('#customColor').value;
+  if (state.brush === 'eraser' && !keepBrush) setBrush(lastInkBrush);
+  save();
+}
+let lastInkBrush = 'pencil';
+function setBrush(b){
+  state.brush = b;
+  if (b !== 'eraser') lastInkBrush = b;
+  document.querySelectorAll('.tool,.dtool').forEach(t => t.classList.toggle('on', t.dataset.brush === b));
+  document.querySelectorAll('.opt').forEach(o => { o.hidden = !o.dataset.for.split(' ').includes(b); });
+  $('#colorSec').style.opacity = b === 'eraser' ? .45 : 1;
+  cursor.classList.toggle('square', b === 'pixel');
+  save();
+}
+document.querySelectorAll('.tool').forEach(t => t.addEventListener('click', () => setBrush(t.dataset.brush)));
+document.querySelectorAll('#shapeSeg button').forEach(b => b.addEventListener('click', () => setShape(b.dataset.shape)));
+function setShape(s){
+  state.shape = s;
+  document.querySelectorAll('#shapeSeg button').forEach(x => x.classList.toggle('on', x.dataset.shape === s));
+  save();
+}
+function bindRange(id, key, fmt = v => v){
+  const el = $('#' + id), out = $('#' + id + 'Out');
+  el.value = state[key]; out.textContent = fmt(state[key]);
+  el.addEventListener('input', () => { state[key] = parseFloat(el.value); out.textContent = fmt(state[key]); save(); });
+}
+function setRange(id, key, v){ state[key] = v; $('#' + id).value = v; $('#' + id + 'Out').textContent = v; }
+
+const ICON_PAUSE = '<svg viewBox="0 0 16 16" fill="currentColor"><rect x="3.5" y="2.5" width="3" height="11" rx="1"/><rect x="9.5" y="2.5" width="3" height="11" rx="1"/></svg>';
+const ICON_PLAY = '<svg viewBox="0 0 16 16" fill="currentColor"><path d="M4 2.6v10.8c0 .5.5.8.9.5l8.3-5.4c.4-.2.4-.8 0-1L4.9 2.1c-.4-.3-.9 0-.9.5z"/></svg>';
+function setPlaying(p){
+  state.playing = p;
+  $('#playBtn').innerHTML = p ? ICON_PAUSE + '<span class="lbl">หยุดเส้น</span>' : ICON_PLAY + '<span class="lbl">เล่นต่อ</span>';
+  dirty = true; save();
+}
+function updateUI(){
+  const canUndo = room.active ? room.myUndo.length > 0 : undoStack.length > 0;
+  const canRedo = room.active ? room.myRedo.length > 0 : redoStack.length > 0;
+  $('#undoBtn').disabled = $('#mUndo').disabled = !canUndo;
+  $('#redoBtn').disabled = $('#mRedo').disabled = !canRedo;
+  $('#empty').classList.toggle('gone', strokes.length > 0 || !!current);
+}
+
+$('#undoBtn').addEventListener('click', undo);
+$('#mUndo').addEventListener('click', undo);
+$('#mRedo').addEventListener('click', redo);
+$('#redoBtn').addEventListener('click', redo);
+$('#clearBtn').addEventListener('click', clearAll);
+$('#playBtn').addEventListener('click', () => setPlaying(!state.playing));
+function setFold(open){
+  $('#foldSec').classList.toggle('closed', !open);
+  $('#foldBtn').setAttribute('aria-expanded', open);
+  try { localStorage.setItem('yukyik-fold', open ? '1' : '0'); } catch (_) {}
+}
+$('#foldBtn').addEventListener('click', () => setFold($('#foldSec').classList.contains('closed')));
+try { if (localStorage.getItem('yukyik-fold') === '0') setFold(false); } catch (_) {}
+/* แผ่นเครื่องมือบนมือถือ */
+const mq = window.matchMedia('(max-width:760px), (max-height:500px)');
+function openSheet(){ closeColorPop(); $('#panel').classList.add('open'); $('#backdrop').classList.add('show'); }
+function closeSheet(){ $('#panel').classList.remove('open'); $('#backdrop').classList.remove('show'); }
+$('#dockMore').addEventListener('click', openSheet);
+function closeColorPop(){ $('#colorPop').hidden = true; }
+$('#dockColor').addEventListener('click', e => { e.stopPropagation(); $('#colorPop').hidden = !$('#colorPop').hidden; });
+document.addEventListener('pointerdown', e => {
+  if (!$('#colorPop').hidden && !e.target.closest('#colorPop') && !e.target.closest('#dockColor')) closeColorPop();
+});
+$('#closeSheet').addEventListener('click', closeSheet);
+$('#backdrop').addEventListener('click', closeSheet);
+(mq.addEventListener ? mq.addEventListener('change', e => { if (!e.matches) closeSheet(); }) : mq.addListener(e => { if (!e.matches) closeSheet(); }));
+(() => {
+  const dock = $('#dock'), sep = dock.querySelector('.sep');
+  document.querySelectorAll('.tool').forEach(t => {
+    const b = document.createElement('button');
+    b.className = 'dtool'; b.dataset.brush = t.dataset.brush; b.setAttribute('aria-label', t.querySelector('span').textContent);
+    b.append(t.querySelector('svg').cloneNode(true));
+    b.addEventListener('click', () => setBrush(t.dataset.brush));
+    dock.insertBefore(b, sep);
+  });
+})();
+
+let toastT;
+function toast(msg){ const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 2600); }
+
+/* ---------- export ---------- */
+let lastBlob = null;
+$('#saveBtn').addEventListener('click', () => {
+  render();
+  // ในห้องบันทึกเฉพาะกระดาษสี่เหลี่ยมของห้อง ไม่เอาพื้นที่หรี่รอบ ๆ
+  const sx = Math.round(OX*DPR), sy = Math.round(OY*DPR);
+  const sw = room.active ? Math.round(BOARD*VS*DPR) : paperC.width, sh = room.active ? sw : paperC.height;
+  const c = document.createElement('canvas'); c.width = sw; c.height = sh;
+  const g = c.getContext('2d');
+  g.drawImage(paperC, sx, sy, sw, sh, 0, 0, sw, sh); g.drawImage(inkC, sx, sy, sw, sh, 0, 0, sw, sh);
+  const url = c.toDataURL('image/png');
+  $('#outImg').src = url; $('#dlBtn').href = url;
+  lastBlob = null; c.toBlob(b => { lastBlob = b; }, 'image/png');
+  $('#modal').classList.add('show');
+});
+$('#closeModal').addEventListener('click', () => $('#modal').classList.remove('show'));
+$('#modal').addEventListener('click', e => { if (e.target.id === 'modal') $('#modal').classList.remove('show'); });
+$('#copyImg').addEventListener('click', async () => {
+  try {
+    if (!lastBlob || !window.ClipboardItem) throw 0;
+    await navigator.clipboard.write([new ClipboardItem({'image/png': lastBlob})]);
+    toast('คัดลอกรูปแล้ว วางที่ไหนก็ได้เลย');
+  } catch (_) { toast('คัดลอกไม่ได้ ลองคลิกขวาที่รูปแล้วกดบันทึกแทนนะ'); }
+});
+
+
+/* ---------- วาดกับเพื่อน (Firebase Realtime Database) ---------- */
+const FB_VER = '12.4.0';
+const CODE_RE = /^[23456789ABCDEFGHJKMNPQRSTUVWXYZ]{6}$/;   // รหัสห้องและรหัสผ่าน 6 ตัว (ไม่มี 0 O 1 I L ที่สับสนง่าย)
+const TYPES = ['pencil','pixel','wave','eraser'], SHAPES = ['zigzag','sine','coil'];
+const MAX_PTS = 5000, LIVE_PTS = 1500;
+
+function isFramed(){ try { return window.self !== window.top; } catch (_) { return true; } }
+function fbConfig(){
+  const c = window.FIREBASE_CONFIG;
+  if (!c || typeof c !== 'object') return null;
+  if (!c.apiKey || !c.databaseURL || String(c.apiKey).includes('ใส่')) return null;
+  return c;
+}
+const R = p => room.fb.ref(room.db, p);
+const clampN = (v, lo, hi, def) => (typeof v === 'number' && isFinite(v)) ? Math.min(hi, Math.max(lo, v)) : def;
+const r2 = v => Math.round(v * 100) / 100;
+
+async function ensureFirebase(){
+  if (room.fb) return room.fb;
+  const cfg = fbConfig();
+  if (!cfg) throw {code:'no-config'};
+  const base = `https://www.gstatic.com/firebasejs/${FB_VER}/`;
+  const [appM, authM, dbM] = await Promise.all([
+    import(base + 'firebase-app.js'), import(base + 'firebase-auth.js'), import(base + 'firebase-database.js')
+  ]);
+  const app = appM.initializeApp(cfg);
+  const auth = authM.getAuth(app);
+  const cred = await authM.signInAnonymously(auth);
+  room.uid = cred.user.uid;
+  room.db = dbM.getDatabase(app);
+  room.fb = dbM;
+  return dbM;
+}
+
+/* แปลงเส้นเป็นข้อมูลที่ส่งได้ และแปลงกลับ (ตรวจค่าทุกตัวก่อนใช้) */
+function encode(s, live){
+  let pts = s.pts;
+  if (pts.length > (live ? LIVE_PTS : MAX_PTS)) pts = live ? pts.slice(-LIVE_PTS) : pts.slice(0, MAX_PTS);
+  const p = new Array(pts.length * 2);
+  for (let i = 0; i < pts.length; i++){ p[i*2] = Math.round(pts[i].x); p[i*2+1] = Math.round(pts[i].y); }
+  const d = {
+    u:live ? room.uid : (s.uid || room.uid), t:s.type, c:/^#[0-9a-f]{6}$/.test(s.color) ? s.color : '#2a2420',
+    s:r2(clampN(s.size, .05, 400, 4)), sd:s.seed|0, w:r2(clampN(s.wiggle, 0, 10, 2)), px:r2(clampN(s.pixel, 1, 200, 6)),
+    a:r2(clampN(s.amp, 0, 400, 7)), wl:r2(clampN(s.wavelen, 2, 800, 18)), sh:SHAPES.includes(s.shape) ? s.shape : 'zigzag',
+    p:p.join(',')
+  };
+  if (!live) d.ts = room.fb.serverTimestamp();
+  return d;
+}
+function decode(d){
+  if (!d || typeof d !== 'object' || !TYPES.includes(d.t) || typeof d.p !== 'string' || d.p.length > 60000) return null;
+  const nums = d.p.split(',', MAX_PTS * 2), pts = [];
+  for (let i = 0; i + 1 < nums.length; i += 2){
+    const x = +nums[i], y = +nums[i+1];
+    if (isFinite(x) && isFinite(y) && Math.abs(x) < 1e6 && Math.abs(y) < 1e6) pts.push({x, y});
+  }
+  if (!pts.length) return null;
+  const s = {
+    type:d.t, color:/^#[0-9a-f]{6}$/.test(d.c) ? d.c : '#2a2420', size:clampN(d.s, .05, 400, 4), seed:clampN(d.sd, -2e9, 2e9, 1)|0,
+    wiggle:clampN(d.w, 0, 10, 2), pixel:clampN(d.px, 2, 200, 6), amp:clampN(d.a, 0, 400, 7), wavelen:clampN(d.wl, 2, 800, 18),
+    shape:SHAPES.includes(d.sh) ? d.sh : 'zigzag', uid:typeof d.u === 'string' ? d.u : '',
+    pts:pts.length > 1 ? pts : [pts[0], {x:pts[0].x + .3, y:pts[0].y + .1}], wpts:[], cache:{}
+  };
+  if (s.type === 'wave') s.wpts = resample(s.pts, 1);
+  return s;
+}
+function insertSorted(s){
+  if (strokes.some(x => x.id === s.id)) return;
+  const next = strokes.slice();
+  let i = next.length;
+  while (i > 0 && next[i-1].id > s.id) i--;
+  next.splice(i, 0, s);
+  strokes = next; dirty = true;
+}
+function removeLocal(id){
+  const i = strokes.findIndex(x => x.id === id);
+  if (i >= 0){ strokes = strokes.slice(0, i).concat(strokes.slice(i + 1)); dirty = true; }
+}
+
+/* ห้อง */
+async function claimSlot(code){
+  const fb = room.fb;
+  const cur = (await fb.get(R(`rooms/${code}/slots`))).val() || {};
+  if (cur.a === room.uid) return 'a';
+  if (cur.b === room.uid) return 'b';
+  for (const slot of ['a', 'b']){
+    if (cur[slot]) continue;
+    try {
+      const res = await fb.runTransaction(R(`rooms/${code}/slots/${slot}`), v => (v === null || v === room.uid) ? room.uid : undefined);
+      if (res.committed && res.snapshot.val() === room.uid) return slot;
+    } catch (_) {}
+  }
+  return null;
+}
+const ROOM_TTL = 3 * 24 * 60 * 60 * 1000;   // ห้องอยู่ได้ 3 วัน
+function expiresAt(meta){ return (meta && meta.createdAt || 0) + ROOM_TTL; }
+function leftText(ms){
+  if (ms <= 0) return 'หมดอายุแล้ว';
+  const h = Math.floor(ms / 3600000), d = Math.floor(h / 24);
+  if (d >= 1) return `ห้องจะหายในอีก ${d} วัน ${h % 24} ชั่วโมง`;
+  if (h >= 1) return `ห้องจะหายในอีก ${h} ชั่วโมง`;
+  return `ห้องจะหายในอีก ${Math.max(1, Math.ceil(ms / 60000))} นาที`;
+}
+async function joinRoom(code, key){
+  const fb = await ensureFirebase();
+  const meta = (await fb.get(R(`rooms/${code}/meta`))).val();
+  if (!meta) throw {code:'not-found'};
+  if (Date.now() > expiresAt(meta)) throw {code:'expired'};
+  room.meta = meta; room.key = null;
+  if (meta.private === true){
+    if (meta.owner !== room.uid){
+      if (!key) throw {code:'need-key'};
+      // เขียนรหัสผ่านลงที่ของตัวเอง กฎของฐานข้อมูลจะยอมก็ต่อเมื่อรหัสตรงกับของห้อง
+      try { await fb.set(R(`rooms/${code}/keys/${room.uid}`), key); }
+      catch (err) { if (errKey(err) === 'denied') throw {code:'wrong-key'}; throw err; }
+    }
+    room.key = key || readOwnKey(code);
+  }
+  const slot = await claimSlot(code);
+  if (!slot) throw {code:'full'};
+  await enterRoom(code, slot);
+}
+async function enterRoom(code, slot){
+  const fb = room.fb, base = `rooms/${code}`;
+  if (current){ current = null; raw = null; activeId = null; }
+  room.solo = {strokes, undoStack, redoStack};
+  strokes = []; undoStack = []; redoStack = [];
+  Object.assign(room, {active:true, code, slot, myUndo:[], myRedo:[], members:1, connected:true});
+  room.live.clear();
+
+  // ถ้าเจ้าของลบห้อง หรือห้องครบ 3 วัน ให้ออกจากห้องเอง
+  room.unsubs.push(fb.onValue(R(`${base}/meta`), snap => {
+    if (!room.active) return;
+    if (!snap.exists()){ leaveRoom().then(() => toast('ห้องนี้ถูกลบแล้ว รูปเดิมของคุณกลับมาแล้ว')); return; }
+    room.meta = snap.val(); updateRoomUI();
+  }));
+  clearTimeout(room.expireTimer);
+  room.expireTimer = setTimeout(() => { if (room.active) leaveRoom().then(() => toast('ห้องนี้ครบ 3 วันแล้ว จึงปิดไป')); },
+    Math.min(2147483647, Math.max(0, expiresAt(room.meta) - Date.now())));
+
+  const sref = R(`${base}/strokes`);
+  room.unsubs.push(fb.onChildAdded(sref, snap => {
+    const s = decode(snap.val()); if (!s) return;
+    s.id = snap.key; insertSorted(s); updateUI();
+  }, roomFail));
+  room.unsubs.push(fb.onChildRemoved(sref, snap => { removeLocal(snap.key); updateUI(); }));
+
+  const lref = R(`${base}/live`);
+  const onLive = snap => {
+    if (snap.key === room.uid) return;
+    const s = decode(snap.val());
+    if (s) room.live.set(snap.key, s); else room.live.delete(snap.key);
+    dirty = true;
+  };
+  room.unsubs.push(fb.onChildAdded(lref, onLive), fb.onChildChanged(lref, onLive),
+    fb.onChildRemoved(lref, snap => { room.live.delete(snap.key); dirty = true; }));
+
+  room.unsubs.push(fb.onValue(R(`${base}/slots`), snap => {
+    const v = snap.val() || {};
+    const n = Object.values(v).filter(Boolean).length, prev = room.members;
+    room.members = Math.max(1, n);
+    if (n > prev && prev >= 1 && n >= 2) toast('เพื่อนเข้าห้องแล้ว วาดด้วยกันได้เลย');
+    if (n < prev && prev >= 2) toast('เพื่อนออกจากห้องแล้ว');
+    updateRoomUI();
+  }));
+
+  // ต่อเน็ตใหม่เมื่อไหร่ ให้จองที่นั่งกลับคืน และตั้งให้ลบที่นั่งเองเมื่อหลุด
+  room.unsubs.push(fb.onValue(R('.info/connected'), async snap => {
+    clearTimeout(room.dropTimer);
+    if (!snap.val()){
+      // ตอนเริ่มต่อ Firebase จะบอกว่าออฟไลน์แป๊บหนึ่งก่อนเสมอ จึงรอดูก่อนค่อยขึ้นว่ากำลังต่อใหม่
+      room.dropTimer = setTimeout(() => { room.connected = false; updateRoomUI(); }, 1500);
+      return;
+    }
+    room.connected = true; updateRoomUI();
+    if (!room.active || room.code !== code) return;
+    try {
+      const s = await claimSlot(code);
+      if (!room.active || room.code !== code) return;   // ออกจากห้องไประหว่างรอ
+      if (!s){ toast('ห้องนี้มีคนครบ 2 คนแล้ว'); leaveRoom(); return; }
+      room.slot = s;
+      await fb.onDisconnect(R(`${base}/slots/${s}`)).remove();
+      await fb.onDisconnect(R(`${base}/live/${room.uid}`)).remove();
+    } catch (err) { console.warn(err); }
+  }));
+
+  try { history.replaceState(null, '', '?room=' + code + (room.key ? '&key=' + room.key : '')); } catch (_) {}
+  resize(); updateUI(); updateRoomUI();
+}
+async function leaveRoom(){
+  if (!room.active) return;
+  const fb = room.fb, base = `rooms/${room.code}`, slot = room.slot;
+  room.unsubs.forEach(u => { try { u(); } catch (_) {} });
+  room.unsubs = [];
+  clearTimeout(room.liveTimer); room.liveTimer = null;
+  clearTimeout(room.expireTimer); room.expireTimer = null;
+  clearTimeout(room.dropTimer);
+  try {
+    const lr = R(`${base}/live/${room.uid}`);
+    await fb.onDisconnect(lr).cancel(); await fb.remove(lr);
+    if (slot){ const sr = R(`${base}/slots/${slot}`); await fb.onDisconnect(sr).cancel(); await fb.remove(sr); }
+  } catch (_) {}
+  room.active = false; room.code = null; room.slot = null; room.live.clear();
+  ({strokes, undoStack, redoStack} = room.solo); room.solo = null;
+  current = null; raw = null; activeId = null;
+  try { history.replaceState(null, '', location.pathname); } catch (_) {}
+  resize(); updateUI(); updateRoomUI();
+}
+
+/* ส่งเส้น */
+function roomSendLive(){
+  const now = performance.now();
+  if (now - room.lastLive < 70){
+    if (!room.liveTimer) room.liveTimer = setTimeout(() => { room.liveTimer = null; roomSendLive(); }, 75);
+    return;
+  }
+  room.lastLive = now;
+  if (!current || !room.active) return;
+  room.fb.set(R(`rooms/${room.code}/live/${room.uid}`), encode(current, true)).catch(() => {});
+}
+function roomCommit(s){
+  const fb = room.fb, base = `rooms/${room.code}`;
+  clearTimeout(room.liveTimer); room.liveTimer = null;
+  const id = fb.push(R(`${base}/strokes`)).key;
+  const data = encode(s, false);
+  const local = decode(Object.assign({}, data, {ts:0}));
+  if (!local) return;
+  local.id = id;
+  insertSorted(local);
+  fb.set(R(`${base}/strokes/${id}`), data).catch(err => { removeLocal(id); updateUI(); roomFail(err); });
+  fb.remove(R(`${base}/live/${room.uid}`)).catch(() => {});
+  room.myUndo.push({type:'add', id, data});
+  if (room.myUndo.length > 200) room.myUndo.shift();
+  room.myRedo = [];
+}
+function roomClear(){
+  const fb = room.fb, base = `rooms/${room.code}/strokes`;
+  const items = strokes.filter(s => s.id).map(s => [s.id, encode(s, false)]);
+  strokes = []; dirty = true;
+  fb.remove(R(base)).catch(roomFail);
+  room.myUndo.push({type:'clear', items}); room.myRedo = [];
+  updateUI();
+  toast('ล้างกระดาษของห้องแล้ว อยากได้คืนให้กด “ย้อนกลับ”');
+}
+function roomStep(isUndo){
+  const from = isUndo ? room.myUndo : room.myRedo, to = isUndo ? room.myRedo : room.myUndo;
+  const e = from.pop(); if (!e) return;
+  const fb = room.fb, base = `rooms/${room.code}/strokes`;
+  const restore = list => {
+    const upd = {};
+    for (const [id, d] of list){
+      const data = Object.assign({}, d, {ts:fb.serverTimestamp()}); upd[id] = data;
+      const s = decode(Object.assign({}, d, {ts:0})); if (s){ s.id = id; insertSorted(s); }
+    }
+    fb.update(R(base), upd).catch(roomFail);
+  };
+  if (e.type === 'add'){
+    if (isUndo){ removeLocal(e.id); fb.remove(R(`${base}/${e.id}`)).catch(roomFail); }
+    else restore([[e.id, e.data]]);
+  } else if (e.type === 'clear'){
+    if (isUndo) restore(e.items);
+    else { strokes = []; dirty = true; fb.remove(R(base)).catch(roomFail); }
+  }
+  to.push(e); updateUI();
+}
+
+/* หน้าต่างห้อง */
+const ERR = {
+  'need-key':'ห้องนี้เป็นห้องส่วนตัว ใส่รหัสผ่านก่อนนะ',
+  'wrong-key':'รหัสผ่านไม่ถูกต้อง',
+  'expired':'ห้องนี้ครบ 3 วันแล้ว จึงปิดไป',
+  'no-config':'ยังไม่ได้ตั้งค่า Firebase ดูวิธีตั้งค่าในไฟล์ README.md',
+  'not-found':'ไม่พบห้องนี้ ลองเช็กรหัสอีกครั้ง',
+  'full':'ห้องนี้มีคนครบ 2 คนแล้ว',
+  'bad-code':'รหัสห้องต้องมี 6 ตัว',
+  'auth':'ยังไม่ได้เปิดการเข้าใช้แบบไม่ระบุตัวตน (Anonymous) ใน Firebase',
+  'domain':'โดเมนของเว็บนี้ยังไม่ได้รับอนุญาตใน Firebase (Authorized domains)',
+  'denied':'ฐานข้อมูลไม่อนุญาต ลองเช็กว่าใส่ Security Rules แล้วหรือยัง',
+  'net':'เชื่อมต่อไม่ได้ ลองเช็กอินเทอร์เน็ตแล้วลองใหม่'
+};
+function errKey(err){
+  const c = String((err && (err.code || err.message)) || '');
+  if (ERR[c]) return c;
+  if (/operation-not-allowed|admin-restricted|configuration-not-found/.test(c)) return 'auth';
+  if (/unauthorized-domain|requests-from-referer/.test(c)) return 'domain';
+  if (/permission|PERMISSION_DENIED/i.test(c)) return 'denied';
+  return 'net';
+}
+function roomFail(err){ console.warn(err); toast(ERR[errKey(err)]); }
+function showRoomMsg(key){ const m = $('#roomMsg'); m.textContent = key ? (ERR[key] || key) : ''; m.hidden = !key; }
+function roomReady(){ return fbConfig() ? null : 'no-config'; }
+function openRoomModal(){
+  closeSheet();
+  showRoomMsg(room.active ? null : roomReady());
+  updateRoomUI();
+  $('#roomModal').classList.add('show');
+}
+function closeRoomModal(){ $('#roomModal').classList.remove('show'); }
+function roomLink(){ return location.origin + location.pathname + '?room=' + room.code + (room.key ? '&key=' + room.key : ''); }
+function readOwnKey(code){ try { return (JSON.parse(localStorage.getItem('yukyik-mykeys') || '{}'))[code] || null; } catch (_) { return null; } }
+function updateRoomUI(){
+  const on = room.active;
+  $('#roomBtn').classList.toggle('live', on);
+  $('#roomLbl').textContent = on ? (room.connected ? 'ห้อง ' + room.code : 'กำลังต่อใหม่') : 'วาดกับเพื่อน';
+  $('#roomBadge').hidden = !on;
+  $('#roomCount').textContent = room.members + '/2';
+  $('#roomDot').classList.toggle('off', !room.connected);
+  $('#memberDot').classList.toggle('off', !room.connected);
+  $('#roomLobby').hidden = on; $('#roomIn').hidden = !on;
+  $('#roomTitle').textContent = on ? 'คุณอยู่ในห้องแล้ว' : 'วาดกับเพื่อน';
+  if (on){
+    const m = room.meta || {};
+    $('#roomName').textContent = typeof m.name === 'string' ? m.name : 'ห้อง ' + room.code;
+    $('#roomTag').textContent = m.private ? 'ส่วนตัว' : 'สาธารณะ';
+    $('#roomTag').classList.toggle('private', !!m.private);
+    $('#keyLine').hidden = !(m.private && room.key);
+    $('#keyBig').textContent = room.key || '';
+    $('#expireText').textContent = leftText(expiresAt(m) - Date.now());
+    $('#codeBig').textContent = room.code;
+    $('#shareLink').value = roomLink();
+    $('#memberText').textContent = !room.connected ? 'เน็ตหลุด กำลังเชื่อมต่อใหม่'
+      : room.members >= 2 ? 'เพื่อนอยู่ในห้องแล้ว วาดด้วยกันได้เลย' : 'ตอนนี้มีคุณคนเดียว ส่งลิงก์ให้เพื่อนได้เลย';
+  }
+  const blocked = !!roomReady() || room.busy;
+  $('#joinBtn').disabled = blocked; $('#codeInput').disabled = $('#keyInput').disabled = !!roomReady();
+}
+async function runRoomAction(fn, btn, busyText){
+  if (room.busy) return;
+  room.busy = true; showRoomMsg(null);
+  const old = btn.textContent; btn.textContent = busyText; updateRoomUI();
+  try { await fn(); closeRoomModal(); toast('เข้าห้อง ' + room.code + ' แล้ว'); }
+  catch (err) { console.warn(err); showRoomMsg(errKey(err)); }
+  finally { room.busy = false; btn.textContent = old; updateRoomUI(); }
+}
+$('#roomBtn').addEventListener('click', openRoomModal);
+$('#roomClose').addEventListener('click', closeRoomModal);
+$('#roomModal').addEventListener('click', e => { if (e.target.id === 'roomModal') closeRoomModal(); });
+$('#keyInput').addEventListener('input', e => {
+  const v = e.target.value.toUpperCase().replace(/[^0-9A-Z]/g, '').slice(0, 6);
+  if (v !== e.target.value) e.target.value = v;
+});
+$('#keyForm').addEventListener('submit', e => { e.preventDefault(); $('#joinForm').requestSubmit(); });
+$('#codeInput').addEventListener('input', e => {
+  const v = e.target.value.toUpperCase().replace(/[^0-9A-Z]/g, '').slice(0, 6);
+  if (v !== e.target.value) e.target.value = v;
+});
+$('#joinForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const code = $('#codeInput').value.trim().toUpperCase();
+  if (!CODE_RE.test(code)){ showRoomMsg('bad-code'); return; }
+  const key = $('#keyInput').value.trim().toUpperCase() || null;
+  runRoomAction(async () => {
+    try { await joinRoom(code, key); }
+    catch (err) { if (err && (err.code === 'need-key' || err.code === 'wrong-key')){ $('#keyForm').hidden = false; $('#keyInput').focus(); } throw err; }
+  }, $('#joinBtn'), 'กำลังเข้า');
+});
+$('#leaveRoom').addEventListener('click', async () => { await leaveRoom(); closeRoomModal(); toast('ออกจากห้องแล้ว รูปเดิมของคุณกลับมาแล้ว'); });
+$('#copyLink').addEventListener('click', async () => {
+  try { await navigator.clipboard.writeText(roomLink()); toast('คัดลอกลิงก์แล้ว ส่งให้เพื่อนได้เลย'); }
+  catch (_) { const i = $('#shareLink'); i.focus(); i.select(); toast('กดค้างที่ลิงก์แล้วเลือกคัดลอกได้เลย'); }
+});
+window.addEventListener('pagehide', () => {
+  if (room.active && room.fb){ try { room.fb.remove(R(`rooms/${room.code}/live/${room.uid}`)); } catch (_) {} }
+});
+// เปิดลิงก์ที่มี ?room=รหัส แล้วเข้าห้องให้อัตโนมัติ
+function autoJoin(){
+  let code = null, key = null;
+  try {
+    const q = new URLSearchParams(location.search);
+    code = (q.get('room') || '').toUpperCase();
+    key = (q.get('key') || '').toUpperCase() || null;
+  } catch (_) {}
+  if (!code) return;
+  if (key && !CODE_RE.test(key)) key = null;
+  if (!CODE_RE.test(code) || roomReady()){ openRoomModal(); if (!roomReady()) showRoomMsg('not-found'); return; }
+  $('#codeInput').value = code;
+  if (key) $('#keyInput').value = key;
+  toast('กำลังเข้าห้อง ' + code);
+  room.busy = true;
+  joinRoom(code, key).then(() => toast('เข้าห้อง ' + code + ' แล้ว'))
+    .catch(err => {
+      console.warn(err); openRoomModal(); showRoomMsg(errKey(err));
+      if (err && (err.code === 'need-key' || err.code === 'wrong-key')){ $('#keyForm').hidden = false; $('#keyInput').focus(); }
+    })
+    .finally(() => { room.busy = false; updateRoomUI(); });
+}
+
+/* ---------- keyboard ---------- */
+window.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT' && e.target.type !== 'range') return;
+  const mod = e.ctrlKey || e.metaKey;
+  if (mod && e.key.toLowerCase() === 'z'){ e.preventDefault(); e.shiftKey ? redo() : undo(); return; }
+  if (mod && e.key.toLowerCase() === 'y'){ e.preventDefault(); redo(); return; }
+  if (mod) return;
+  if (e.key === '1') setBrush('pencil');
+  else if (e.key === '2') setBrush('pixel');
+  else if (e.key === '3') setBrush('wave');
+  else if (e.key === '4' || e.key.toLowerCase() === 'e') setBrush('eraser');
+  else if (e.key === '[') setRange('size', 'size', Math.max(1, state.size - 1));
+  else if (e.key === ']') setRange('size', 'size', Math.min(30, state.size + 1));
+  else if (e.key === ' '){
+    e.preventDefault();
+    if (document.activeElement && document.activeElement.tagName === 'BUTTON') document.activeElement.blur();
+    setPlaying(!state.playing);
+  }
+  else if (e.key === 'Escape'){ $('#modal').classList.remove('show'); closeRoomModal(); closeSheet(); closeColorPop(); }
+});
+
+/* ---------- persistence (เฉพาะเบราว์เซอร์นี้) ---------- */
+const KEY = 'yukyik-sketch-v1';
+let saveT;
+function save(){
+  clearTimeout(saveT);
+  saveT = setTimeout(() => {
+    try {
+      const data = {
+        settings:{brush:state.brush, color:state.color, size:state.size, wiggle:state.wiggle, pixel:state.pixel, amp:state.amp, wavelen:state.wavelen, shape:state.shape, fps:state.fps, playing:state.playing, paper:state.paper},
+        strokes:(room.active ? room.solo.strokes : strokes).map(s => ({type:s.type, color:s.color, size:s.size, seed:s.seed, wiggle:s.wiggle, pixel:s.pixel, amp:s.amp, wavelen:s.wavelen, shape:s.shape,
+          pts:s.pts.map(p => [Math.round(p.x*10)/10, Math.round(p.y*10)/10])}))
+      };
+      localStorage.setItem(KEY, JSON.stringify(data));
+    } catch (_) {
+      if (!save.warned){ save.warned = true; toast('ที่เก็บรูปในเบราว์เซอร์เต็มแล้ว รูปล่าสุดอาจไม่ถูกเก็บไว้'); }
+    }
+  }, 400);
+}
+function load(){
+  let d = null;
+  try { d = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (_) {}
+  if (!d || typeof d !== 'object') return;
+  const S = d.settings || {};
+  if (TYPES.includes(S.brush)) state.brush = S.brush;
+  if (/^#[0-9a-f]{6}$/.test(S.color)) state.color = S.color;
+  if (SHAPES.includes(S.shape)) state.shape = S.shape;
+  if (PAPERS[S.paper]) state.paper = S.paper;
+  if (typeof S.playing === 'boolean') state.playing = S.playing;
+  state.size = clampN(S.size, 1, 30, state.size);
+  state.wiggle = clampN(S.wiggle, 0, 6, state.wiggle);
+  state.pixel = clampN(S.pixel, 3, 20, state.pixel);
+  state.amp = clampN(S.amp, 2, 26, state.amp);
+  state.wavelen = clampN(S.wavelen, 6, 60, state.wavelen);
+  state.fps = clampN(S.fps, 2, 24, state.fps);
+  if (!Array.isArray(d.strokes)) return;
+  strokes = [];
+  for (const s of d.strokes){
+    if (!s || !TYPES.includes(s.type) || !Array.isArray(s.pts)) continue;
+    const pts = s.pts.filter(p => Array.isArray(p) && isFinite(p[0]) && isFinite(p[1])).map(p => ({x:+p[0], y:+p[1]}));
+    if (!pts.length) continue;
+    const st = {
+      type:s.type, color:/^#[0-9a-f]{6}$/.test(s.color) ? s.color : '#2a2420', size:clampN(s.size, .05, 400, 4),
+      seed:clampN(s.seed, -2e9, 2e9, 1)|0, wiggle:clampN(s.wiggle, 0, 10, 2), pixel:clampN(s.pixel, 1, 200, 6),
+      amp:clampN(s.amp, 0, 400, 7), wavelen:clampN(s.wavelen, 2, 800, 18), shape:SHAPES.includes(s.shape) ? s.shape : 'zigzag',
+      pts:pts.length > 1 ? pts : resample(pts, 3), wpts:[], cache:{}
+    };
+    if (st.type === 'wave') st.wpts = resample(st.pts, 1);
+    strokes.push(st);
+  }
+}
+
+/* ---------- init ---------- */
+load();
+buildSwatches(); buildPaperPicker();
+bindRange('size', 'size'); bindRange('wiggle', 'wiggle', v => (+v).toFixed(1)); bindRange('pixel', 'pixel');
+bindRange('amp', 'amp'); bindRange('wavelen', 'wavelen'); bindRange('fps', 'fps');
+setColor(state.color); setBrush(state.brush); setShape(state.shape); setPlaying(state.playing);
+document.querySelectorAll('.paper').forEach(b => b.classList.toggle('on', b.dataset.paper === state.paper));
+resize(); updateUI(); updateRoomUI(); autoJoin();
+// ปุ่มดาวน์โหลดซ่อนไว้เมื่อเว็บถูกฝังในกรอบของเว็บอื่น เพราะดาวน์โหลดไม่ได้
+$('#dlBtn').hidden = isFramed();
+if (!isFramed()) document.querySelector('#modal .card p').innerHTML = 'กด “ดาวน์โหลด” เพื่อบันทึกรูป<br>หรือคลิกขวา (กดค้างบนมือถือ) ที่รูปแล้วเลือก “บันทึกรูปภาพ”';
+requestAnimationFrame(loop);
+
+// โลโก้ขยับแบบเดียวกับเส้น
+const logo = document.querySelector('.logo-line');
+const logoFrames = ['M9 27 C14 15, 19 31, 23 21 S31 12, 35 19','M9 26 C15 16, 18 30, 23 22 S30 13, 35 18','M10 27 C14 14, 20 30, 22 21 S31 11, 34 19'];
+let li = 0; setInterval(() => { if (state.playing){ li = (li + 1) % 3; logo.setAttribute('d', logoFrames[li]); } }, 120);
+})();
+</script>
+</body>
+</html>
