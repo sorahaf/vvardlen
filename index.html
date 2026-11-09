@@ -15,6 +15,7 @@
 html,body{margin:0;min-height:100%;background:var(--bg);font-family:'Mali',system-ui,sans-serif;color:var(--ink);-webkit-tap-highlight-color:transparent}
 button,input{font:inherit;color:inherit}
 a{color:inherit}
+.top-r{display:flex;align-items:center;gap:10px}
 .top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:calc(12px + env(safe-area-inset-top)) max(18px, env(safe-area-inset-right)) 12px max(18px, env(safe-area-inset-left))}
 .brand{display:flex;align-items:center;gap:10px;text-decoration:none}
 .brand svg{width:38px;height:38px;flex:none}
@@ -140,10 +141,11 @@ label.field{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(
     <svg viewBox="0 0 44 44" aria-hidden="true"><rect x="2" y="2" width="40" height="40" rx="12" fill="#ff5a36"/><path id="logoLine" d="M9 27 C14 15, 19 31, 23 21 S31 12, 35 19" fill="none" stroke="#fffaf1" stroke-width="3.4" stroke-linecap="round"/></svg>
     <h1>วาดเล่น</h1>
   </a>
+  <div class="top-r"><div class="lang-slot"></div>
   <a class="btn primary pop" href="draw.html">
     <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 2.5l3 3-8 8H2.5v-3z"/></svg>
     <span class="solo-lbl">วาดคนเดียว</span>
-  </a>
+  </a></div>
 </header>
 
 <main class="wrap">
@@ -211,6 +213,7 @@ label.field{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(
   </div>
 </div>
 
+<script src="i18n.js"></script>
 <script src="firebase-config.js"></script>
 <script>
 (() => {
@@ -337,7 +340,7 @@ function render(){
     const mine = r.owner === st.uid, n = st.counts[r.code] || 0, full = n >= 2;
     const el = document.createElement('div'); el.className = 'room' + (mine ? ' mine' : '');
     const main = document.createElement('div');
-    const nm = document.createElement('div'); nm.className = 'r-name'; nm.textContent = r.name;
+    const nm = document.createElement('div'); nm.className = 'r-name'; nm.textContent = r.name; nm.translate = r.name === 'ห้องไม่มีชื่อ';
     const meta = document.createElement('div'); meta.className = 'r-meta';
     const tag = document.createElement('span'); tag.className = 'tag' + (r.private ? ' private' : ''); tag.textContent = r.private ? 'ส่วนตัว' : 'สาธารณะ';
     const ppl = document.createElement('span'); ppl.innerHTML = ICON_PEOPLE; ppl.append(` ${n}/2`); if (full) ppl.classList.add('full');
