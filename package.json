@@ -1,0 +1,14 @@
+{
+  "name": "vvardlen",
+  "private": true,
+  "description": "วาดเล่น: สมุดวาดรูปออนไลน์ เส้นขยับได้เอง",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p .",
+    "check": "tsc -p . --noEmit",
+    "dev": "tsc -p . --watch"
+  },
+  "devDependencies": {
+    "typescript": "6.0.3"
+  }
+}
