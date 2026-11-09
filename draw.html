@@ -347,6 +347,22 @@ a.btn{color:var(--ink);text-decoration:none}
   .empty div{margin:0}
   .toast{bottom:calc(14px + env(safe-area-inset-bottom))}
 }
+
+/* ---------- ลุคสมุดโน้ต (แต่งเล็กน้อย) ---------- */
+.panel{background:repeating-linear-gradient(transparent 0 29px,rgba(110,140,185,.10) 29px 30px) 0 0/100% 30px local,var(--panel)}
+section h2,.fold-head h2{display:inline-block;color:var(--ink);font-size:12.5px;padding:0 4px;margin-left:-2px;
+  background:linear-gradient(transparent 55%,rgba(255,196,70,.45) 55% 90%,transparent 90%)}
+.tool,.btn,.pk-btn,.pk-hex,.layer,.layer-tools button{border-radius:13px 16px 12px 17px/16px 12px 17px 13px}
+.paper canvas{border-radius:10px 13px 9px 12px/13px 9px 12px 10px}
+.tool:not(.on):hover{transform:rotate(-1.2deg)}
+.tool:active,.btn:active:not(:disabled),.layer-tools button:active:not(:disabled),.pk-btn:active{transform:translate(1px,1px) scale(.97)}
+.btn,.layer-tools button,.pk-btn{transition:border-color .15s,background .15s,transform .1s}
+#modal .card{position:relative;overflow:visible}
+#modal .card::before{content:'';position:absolute;top:-11px;left:50%;width:92px;height:24px;margin-left:-46px;transform:rotate(-2.5deg);
+  background:rgba(255,232,160,.78);box-shadow:0 1px 2px rgba(60,40,20,.12);
+  -webkit-mask:linear-gradient(90deg,#000 0 0) center/calc(100% - 8px) 100% no-repeat,conic-gradient(from 45deg at 0 50%,#000 25%,transparent 0) 0 0/4px 6px repeat-y,conic-gradient(from -135deg at 100% 50%,#000 25%,transparent 0) 100% 0/4px 6px repeat-y;
+          mask:linear-gradient(90deg,#000 0 0) center/calc(100% - 8px) 100% no-repeat,conic-gradient(from 45deg at 0 50%,#000 25%,transparent 0) 0 0/4px 6px repeat-y,conic-gradient(from -135deg at 100% 50%,#000 25%,transparent 0) 100% 0/4px 6px repeat-y}
+@media (prefers-reduced-motion:reduce){.tool:not(.on):hover,.tool:active,.btn:active{transform:none}}
 </style>
 </head>
 <body>
@@ -461,8 +477,8 @@ a.btn{color:var(--ink);text-decoration:none}
 
     <section>
       <div class="actions">
-        <button class="btn" id="undoBtn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3 2 6l3 3"/><path d="M2 6h7.5a4 4 0 0 1 0 8H6"/></svg>ย้อนกลับ</button>
-        <button class="btn" id="redoBtn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m11 3 3 3-3 3"/><path d="M14 6H6.5a4 4 0 0 0 0 8H10"/></svg>ทำซ้ำ</button>
+        <button class="btn" id="undoBtn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3 2 6l3 3"/><path d="M2 6h7.5a4 4 0 0 1 0 8H6"/></svg>Undo</button>
+        <button class="btn" id="redoBtn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m11 3 3 3-3 3"/><path d="M14 6H6.5a4 4 0 0 0 0 8H10"/></svg>Redo</button>
         <button class="btn" id="clearBtn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 4h11M6 4V2.5h4V4M4 4l.7 9.5h6.6L12 4"/></svg>ล้างกระดาษ</button>
         <button class="btn primary" id="saveBtn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v8M4.5 6.5 8 10l3.5-3.5M2.5 13.5h11"/></svg>บันทึกรูป</button>
       </div>
@@ -474,8 +490,8 @@ a.btn{color:var(--ink);text-decoration:none}
         <li><kbd>1</kbd> ถึง <kbd>5</kbd> เลือกแปรง</li>
         <li><kbd>[</kbd> <kbd>]</kbd> เส้นบางลง หรือหนาขึ้น</li>
         <li><kbd>Space</kbd> หยุดหรือเล่นเส้น</li>
-        <li><kbd>Ctrl</kbd> + <kbd>Z</kbd> ย้อนกลับ</li>
-        <li><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Z</kbd> ทำซ้ำ</li>
+        <li><kbd>Ctrl</kbd> + <kbd>Z</kbd> Undo</li>
+        <li><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Z</kbd> Redo</li>
         <li><kbd>Ctrl</kbd> + ลูกกลิ้ง ซูมเข้าออก</li>
         <li>ลูกกลิ้ง หรือปุ่มลูกศร เลื่อนกระดาษ</li>
         <li><kbd>Ctrl</kbd> + <kbd>0</kbd> กลับขนาดพอดีจอ</li>
@@ -496,8 +512,8 @@ a.btn{color:var(--ink);text-decoration:none}
     </div>
     <div class="float">
       <button class="pill" id="layerBtn" title="เลเยอร์" aria-label="เลเยอร์"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2 1.8 5.2 8 8.4l6.2-3.2z"/><path d="m1.8 8.2 6.2 3.2 6.2-3.2"/><path d="m1.8 11 6.2 3.2 6.2-3.2"/></svg><span class="lbl">เลเยอร์</span><span id="layerBtnNum">1</span></button>
-      <button class="pill icon only-mobile" id="mUndo" title="ย้อนกลับ" aria-label="ย้อนกลับ"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3 2 6l3 3"/><path d="M2 6h7.5a4 4 0 0 1 0 8H6"/></svg></button>
-      <button class="pill icon only-mobile" id="mRedo" title="ทำซ้ำ" aria-label="ทำซ้ำ"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m11 3 3 3-3 3"/><path d="M14 6H6.5a4 4 0 0 0 0 8H10"/></svg></button>
+      <button class="pill icon only-mobile" id="mUndo" title="Undo" aria-label="Undo"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3 2 6l3 3"/><path d="M2 6h7.5a4 4 0 0 1 0 8H6"/></svg></button>
+      <button class="pill icon only-mobile" id="mRedo" title="Redo" aria-label="Redo"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m11 3 3 3-3 3"/><path d="M14 6H6.5a4 4 0 0 0 0 8H10"/></svg></button>
       <button class="pill only-mobile" id="zoomChip" title="กลับขนาดพอดีจอ" hidden>100%</button>
       <button class="pill" id="playBtn"></button>
     </div>
@@ -1376,7 +1392,7 @@ function deleteLayer(){
   layers = layers.filter(l => l.id !== id);
   activeLayer = layers[Math.max(0, i - 1)].id;
   layersChanged();
-  toast('ลบเลเยอร์แล้ว อยากได้คืนให้กด “ย้อนกลับ”');
+  toast('ลบเลเยอร์แล้ว อยากได้คืนให้กด Undo');
 }
 function moveLayer(dir){
   const i = activeIndex(), j = i + dir;
@@ -1498,7 +1514,7 @@ function clearAll(){
   if (!strokes.length) return;
   if (room.active) return roomClear();
   pushHistory(); strokes = []; dirty = true; thumbsDirty = true; updateUI(); save();
-  toast('ล้างกระดาษแล้ว (ทุกเลเยอร์) อยากได้คืนให้กด “ย้อนกลับ”');
+  toast('ล้างกระดาษแล้ว (ทุกเลเยอร์) อยากได้คืนให้กด Undo');
 }
 
 /* ---------- UI ---------- */
@@ -1771,7 +1787,7 @@ $('#saveBtn').addEventListener('click', () => {
   [ZOOM, PX, PY] = saved; paperDirty = true; dirty = true;
   pngUrl = c.toDataURL('image/png');
   lastBlob = null; c.toBlob(b => { lastBlob = b; }, 'image/png');
-  if (gifUrl){ URL.revokeObjectURL(gifUrl); gifUrl = null; }
+  gifUrl = null;
   showFormat('png');
   $('#modal').classList.add('show');
 });
@@ -1786,8 +1802,10 @@ function showFormat(f){
   gifBusy = true; $('#gifBusy').hidden = false; $('#gifBar').style.width = '0';
   $('#gifMsg').textContent = 'กำลังทำ GIF รอสักครู่';
   makeGif(p => { $('#gifBar').style.width = Math.round(p * 100) + '%'; })
-    .then(blob => {
-      gifUrl = URL.createObjectURL(blob);
+    // ใช้ลิงก์แบบ data: (เหมือนภาพ PNG) เพราะบางหน้าที่ฝังเว็บไว้ เช่น หน้าพรีวิว ไม่ยอมโหลดลิงก์แบบ blob:
+    .then(blob => new Promise((ok, fail) => { const r = new FileReader(); r.onload = () => ok([blob, r.result]); r.onerror = fail; r.readAsDataURL(blob); }))
+    .then(([blob, url]) => {
+      gifUrl = url;
       if (document.querySelector('#fmtSeg .on').dataset.f === 'gif'){ $('#outImg').src = gifUrl; $('#dlBtn').href = gifUrl; }
       toast('ทำ GIF เสร็จแล้ว ขนาด ' + Math.max(1, Math.round(blob.size / 1024)) + ' KB');
     })
@@ -1795,6 +1813,7 @@ function showFormat(f){
     .finally(() => { gifBusy = false; $('#gifBusy').hidden = true; });
 }
 document.querySelectorAll('#fmtSeg button').forEach(b => b.addEventListener('click', () => showFormat(b.dataset.f)));
+$('#outImg').addEventListener('error', () => { if ($('#outImg').getAttribute('src')) toast('แสดงรูปในหน้านี้ไม่ได้ ลองเปิดเว็บจากลิงก์ของคุณ (GitHub Pages) แล้วบันทึกอีกครั้ง'); });
 function closeSaveModal(){ $('#modal').classList.remove('show'); }
 $('#closeModal').addEventListener('click', closeSaveModal);
 $('#modal').addEventListener('click', e => { if (e.target.id === 'modal') closeSaveModal(); });
@@ -2054,7 +2073,7 @@ function roomClear(){
   fb.remove(R(base)).catch(roomFail);
   room.myUndo.push({type:'clear', items}); room.myRedo = [];
   updateUI();
-  toast('ล้างกระดาษของห้องแล้ว อยากได้คืนให้กด “ย้อนกลับ”');
+  toast('ล้างกระดาษของห้องแล้ว อยากได้คืนให้กด Undo');
 }
 function roomStep(isUndo){
   const from = isUndo ? room.myUndo : room.myRedo, to = isUndo ? room.myRedo : room.myUndo;

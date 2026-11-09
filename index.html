@@ -65,7 +65,7 @@ a{color:inherit}
 .seg button.on{background:#fff;box-shadow:0 1px 2px rgba(60,40,20,.18);font-weight:600}
 .msg{background:#fff1ec;color:#a3361b;border-radius:12px;padding:10px 14px;font-size:13.5px;line-height:1.5;margin-bottom:12px}
 .msg[hidden]{display:none}
-.list{display:grid;grid-template-columns:repeat(auto-fill, minmax(290px, 1fr));gap:12px}
+.list{display:grid;grid-template-columns:repeat(auto-fill, minmax(290px, 1fr));gap:20px 14px;padding-top:6px}
 .room{background:var(--panel);border:1.5px solid var(--line);border-radius:16px;padding:14px 16px;display:flex;flex-direction:column;justify-content:space-between;gap:12px;transition:border-color .15s}
 .room:hover{border-color:#cdbb9f}
 .room.mine{border-color:#ecc5a2}
@@ -119,6 +119,19 @@ label.field{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(
   .seg button{flex:1;padding:6px 4px}
   .list{grid-template-columns:1fr}
 }
+
+/* ---------- ลุคสมุดโน้ต (แต่งเล็กน้อย) ---------- */
+.btn,.room{border-radius:13px 16px 12px 17px/16px 12px 17px 13px}
+.btn{transition:border-color .15s,background .15s,transform .1s}
+.btn:active:not(:disabled){transform:translate(1px,1px) scale(.97)}
+.room{position:relative;transition:border-color .15s,transform .2s}
+.room:hover{transform:rotate(-.6deg)}
+.room:nth-child(even):hover{transform:rotate(.6deg)}
+.room::before{content:'';position:absolute;top:-9px;left:50%;width:64px;height:18px;margin-left:-32px;transform:rotate(-3deg);
+  background:rgba(255,232,160,.75);box-shadow:0 1px 2px rgba(60,40,20,.12);pointer-events:none}
+.room:nth-child(3n+2)::before{transform:rotate(2.5deg);background:rgba(190,225,255,.7)}
+.room:nth-child(3n)::before{transform:rotate(-1deg);background:rgba(255,200,210,.7)}
+@media (prefers-reduced-motion:reduce){.room:hover,.btn:active{transform:none}}
 </style>
 </head>
 <body>
