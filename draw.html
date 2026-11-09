@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#fffaf1">
 <meta name="description" content="สมุดวาดรูปออนไลน์ เส้นที่วาดจะขยับได้เอง มีดินสอ เส้นพิกเซล และเส้นหยัก เลือกกระดาษได้หลายแบบ">
-<title>กระดานวาด | ยุกยิก</title>
+<title>กระดานวาด | วาดเล่น</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Mali:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -31,6 +31,8 @@ button{font:inherit;color:inherit}
 section h2{font-size:12px;font-weight:600;color:var(--muted);margin:0 0 8px;letter-spacing:.04em}
 
 .brushes{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tool-wide{grid-column:span 2;flex-direction:row;justify-content:center;gap:8px}
+.tool-wide svg{width:64px}
 .tool{border:1.5px solid var(--line);background:#fff;border-radius:14px;padding:8px 6px 6px;cursor:pointer;display:flex;flex-direction:column;
   align-items:center;gap:3px;font-size:13px;transition:border-color .15s, transform .15s, box-shadow .15s}
 .tool svg{width:100%;height:28px;overflow:visible}
@@ -93,6 +95,8 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
 .fold-body{display:grid;grid-template-rows:1fr;transition:grid-template-rows .25s ease}
 .fold.closed .fold-body{grid-template-rows:0fr}
 .fold-inner{overflow:hidden;min-height:0;padding:0 2px}
+.fold-head + .fold-body .fold-inner{padding-top:8px}
+.fold.closed .fold-inner{visibility:hidden}
 .hint kbd{font-family:inherit;background:var(--chip);border:1px solid var(--line);border-radius:5px;padding:0 5px;font-size:11px}
 
 /* ---------- stage ---------- */
@@ -117,6 +121,14 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
 .pill.icon{padding:7px 9px}
 .only-mobile{display:none}
 
+.zoom{position:absolute;right:14px;bottom:14px;z-index:4;display:flex;align-items:center;background:#fffaf1;border:1.5px solid var(--ink);
+  border-radius:999px;box-shadow:2px 2px 0 var(--ink);padding:3px}
+.zoom button{border:0;background:transparent;height:32px;min-width:32px;border-radius:999px;cursor:pointer;display:grid;place-items:center;font-size:12.5px;
+  font-variant-numeric:tabular-nums;touch-action:manipulation}
+.zoom button:hover{background:var(--chip)}
+.zoom #zoomPct{min-width:52px}
+.zoom svg{width:15px;height:15px}
+#zoomChip[hidden]{display:none}
 .toast{position:absolute;left:50%;bottom:22px;transform:translate(-50%,20px);background:var(--ink);color:#fff;font-size:13px;padding:9px 16px;
   border-radius:999px;opacity:0;transition:.25s;pointer-events:none;z-index:6;white-space:nowrap}
 .toast.show{opacity:1;transform:translate(-50%,0)}
@@ -195,7 +207,9 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
   .sheet-head b{font-size:16px;margin-top:8px}
   .sheet-head button{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--line);background:#fff;display:grid;place-items:center;margin-top:6px;cursor:pointer}
   .sheet-head svg{width:16px;height:16px}
-  .brushes{grid-template-columns:repeat(4,1fr);gap:7px}
+  .brushes{grid-template-columns:repeat(5,1fr);gap:6px}
+  .tool-wide{grid-column:auto;flex-direction:column;gap:3px}
+  .tool-wide svg{width:100%}
   .tool{padding:8px 4px 6px}
   .tool span{font-size:11.5px;line-height:1.25;text-align:center}
   .swatches{gap:10px}
@@ -206,6 +220,7 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
   .backdrop{display:block;position:fixed;inset:0;background:rgba(30,20,10,.28);z-index:29;opacity:0;pointer-events:none;transition:opacity .25s}
   .backdrop.show{opacity:1;pointer-events:auto}
   .only-mobile{display:flex}
+  .zoom{display:none}
   .float{top:calc(10px + env(safe-area-inset-top));right:calc(10px + env(safe-area-inset-right));gap:6px}
   .float-left{top:calc(10px + env(safe-area-inset-top));left:calc(10px + env(safe-area-inset-left))}
   .float-left .pill .lbl{display:inline}
@@ -233,6 +248,13 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
 @media (max-height:500px) and (orientation:landscape){
   .color-pop{left:calc(76px + env(safe-area-inset-left));top:50%;bottom:auto;transform:translateY(-50%);width:280px}
 }
+@media (max-width:430px) and (min-height:501px){
+  .dock button{width:42px;height:42px}
+  .dock button svg{width:29px}
+}
+@media (max-width:380px){
+  .float-left .pill .lbl{display:none}
+}
 @media (max-width:360px){
   .dock button{width:40px;height:40px}
   .dock button svg{width:27px}
@@ -246,6 +268,7 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
   .sheet-head .handle{display:none}
   .sheet-head b,.sheet-head button{margin-top:2px}
   .brushes{grid-template-columns:1fr 1fr}
+  .tool-wide{grid-column:span 2;flex-direction:row}
   .dock{left:calc(12px + env(safe-area-inset-left));top:50%;bottom:auto;transform:translateY(-50%);flex-direction:column}
   .dock button{width:42px;height:42px}
   .dock .sep{width:auto;height:1.5px;align-self:stretch;margin:3px 8px}
@@ -258,12 +281,12 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
 <div class="app">
   <aside class="panel" id="panel" aria-label="เครื่องมือ">
     <div class="sheet-head"><span class="handle"></span><b>เครื่องมือ</b><button id="closeSheet" aria-label="ปิด"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4l8 8M12 4l-8 8"/></svg></button></div>
-    <a class="brand" href="./" title="กลับหน้ารวมห้อง">
+    <a class="brand" href="./" title="กลับหน้าแรก">
       <svg viewBox="0 0 44 44" aria-hidden="true">
         <rect x="2" y="2" width="40" height="40" rx="12" fill="#ff5a36"/>
         <path class="logo-line" d="M9 27 C14 15, 19 31, 23 21 S31 12, 35 19" fill="none" stroke="#fffaf1" stroke-width="3.4" stroke-linecap="round"/>
       </svg>
-      <div><h1>ยุกยิก</h1><small>กลับหน้ารวมห้อง</small></div>
+      <div><h1>วาดเล่น</h1><small>กลับหน้าแรก</small></div>
     </a>
 
     <section>
@@ -281,29 +304,37 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
           <svg viewBox="0 0 80 28"><path d="M6 14 L11 6 L17 22 L23 6 L29 22 L35 6 L41 22 L47 6 L53 22 L59 6 L65 22 L71 6 L74 11" fill="none" stroke="#2a2420" stroke-width="2.6" stroke-linejoin="miter" stroke-linecap="round"/></svg>
           <span>เส้นหยัก</span>
         </button>
-        <button class="tool" data-brush="eraser" title="ยางลบ (4)">
+        <button class="tool" data-brush="paint" title="สีน้ำมัน (4)">
+          <svg viewBox="0 0 80 28"><g stroke-linecap="round" fill="none"><path d="M8 17 C22 7, 40 21, 72 11" stroke="#f0a04b" stroke-width="11" opacity=".55"/><path d="M12 15 C26 9, 44 19, 68 12" stroke="#e8743b" stroke-width="6" opacity=".6"/><path d="M16 19 C30 13, 48 20, 64 15" stroke="#ffd27a" stroke-width="3" opacity=".7"/></g></svg>
+          <span>สีน้ำมัน</span>
+        </button>
+        <button class="tool tool-wide" data-brush="eraser" title="ยางลบ (5)">
           <svg viewBox="0 0 80 28"><g transform="rotate(-18 40 14)"><rect x="24" y="7" width="32" height="14" rx="3" fill="#ffb3a3" stroke="#2a2420" stroke-width="2"/><rect x="24" y="7" width="11" height="14" rx="3" fill="#fff" stroke="#2a2420" stroke-width="2"/></g></svg>
           <span>ยางลบ</span>
         </button>
       </div>
     </section>
 
-    <section id="colorSec">
-      <h2>สีเส้น</h2>
-      <div class="swatches" id="swatches"></div>
-      <label class="custom">เลือกสีเอง <input type="color" id="customColor" value="#2a2420"></label>
+    <section class="fold" id="colorSec" data-fold="color">
+      <button class="fold-head" aria-expanded="true"><h2>สีเส้น</h2><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 6 4 4 4-4"/></svg></button>
+      <div class="fold-body"><div class="fold-inner">
+        <div class="swatches" id="swatches"></div>
+        <label class="custom">เลือกสีเอง <input type="color" id="customColor" value="#2a2420"></label>
+      </div></div>
     </section>
 
-    <section class="fold" id="foldSec">
-      <button class="fold-head" id="foldBtn" aria-expanded="true">
-        <h2>ปรับเส้น</h2>
-        <svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 6 4 4 4-4"/></svg>
-      </button>
+    <section class="fold" id="lineSec" data-fold="line">
+      <button class="fold-head" aria-expanded="true"><h2>ปรับเส้น</h2><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 6 4 4 4-4"/></svg></button>
       <div class="fold-body"><div class="fold-inner">
       <div class="row"><span>ความหนาของเส้น</span><output id="sizeOut">4</output></div>
       <input type="range" id="size" min="1" max="30" step="1" value="4">
 
-      <div class="opt" data-for="pencil pixel">
+      <div class="opt" data-for="paint" hidden>
+        <div class="row"><span>ความเข้มสี</span><output id="flowOut">55%</output></div>
+        <input type="range" id="flow" min="0.1" max="1" step="0.05" value="0.55">
+      </div>
+
+      <div class="opt" data-for="pencil pixel paint">
         <div class="row"><span>เส้นสั่นมากแค่ไหน</span><output id="wiggleOut">2.2</output></div>
         <input type="range" id="wiggle" min="0" max="6" step="0.1" value="2.2">
       </div>
@@ -331,9 +362,11 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
       </div></div>
     </section>
 
-    <section>
-      <h2>เลือกกระดาษ</h2>
-      <div class="papers" id="papers"></div>
+    <section class="fold" id="paperSec" data-fold="paper">
+      <button class="fold-head" aria-expanded="true"><h2>เลือกกระดาษ</h2><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 6 4 4 4-4"/></svg></button>
+      <div class="fold-body"><div class="fold-inner">
+        <div class="papers" id="papers"></div>
+      </div></div>
     </section>
 
     <section>
@@ -348,11 +381,14 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
     <div class="hint">
       <b>ปุ่มลัดบนคีย์บอร์ด</b>
       <ul>
-        <li><kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> <kbd>4</kbd> เลือกแปรง</li>
+        <li><kbd>1</kbd> ถึง <kbd>5</kbd> เลือกแปรง</li>
         <li><kbd>[</kbd> <kbd>]</kbd> เส้นบางลง หรือหนาขึ้น</li>
         <li><kbd>Space</kbd> หยุดหรือเล่นเส้น</li>
         <li><kbd>Ctrl</kbd> + <kbd>Z</kbd> ย้อนกลับ</li>
         <li><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Z</kbd> ทำซ้ำ</li>
+        <li><kbd>Ctrl</kbd> + ลูกกลิ้ง ซูมเข้าออก</li>
+        <li>ลูกกลิ้ง หรือปุ่มลูกศร เลื่อนกระดาษ</li>
+        <li><kbd>Ctrl</kbd> + <kbd>0</kbd> กลับขนาดพอดีจอ</li>
       </ul>
     </div>
   </aside>
@@ -368,6 +404,7 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
     <div class="float">
       <button class="pill icon only-mobile" id="mUndo" title="ย้อนกลับ" aria-label="ย้อนกลับ"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3 2 6l3 3"/><path d="M2 6h7.5a4 4 0 0 1 0 8H6"/></svg></button>
       <button class="pill icon only-mobile" id="mRedo" title="ทำซ้ำ" aria-label="ทำซ้ำ"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m11 3 3 3-3 3"/><path d="M14 6H6.5a4 4 0 0 0 0 8H10"/></svg></button>
+      <button class="pill only-mobile" id="zoomChip" title="กลับขนาดพอดีจอ" hidden>100%</button>
       <button class="pill" id="playBtn"></button>
     </div>
     <nav class="dock" id="dock" aria-label="แปรงด่วน">
@@ -378,6 +415,11 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
     <div class="color-pop" id="colorPop" hidden>
       <div class="swatches" id="popSwatches"></div>
       <label class="custom">เลือกสีเอง <input type="color" id="popCustom" value="#2a2420"></label>
+    </div>
+    <div class="zoom" id="zoomCtl">
+      <button id="zoomOut" aria-label="ซูมออก" title="ซูมออก (Ctrl -)"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3.5 8h9"/></svg></button>
+      <button id="zoomPct" title="กลับขนาดพอดีจอ (Ctrl 0)">100%</button>
+      <button id="zoomIn" aria-label="ซูมเข้า" title="ซูมเข้า (Ctrl +)"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3.5 8h9M8 3.5v9"/></svg></button>
     </div>
     <div class="toast" id="toast"></div>
   </main>
@@ -440,12 +482,16 @@ const WAVE_FRAMES = 12;  // จำนวนเฟรมของคลื่น�
 
 const state = {
   brush:'pencil', color:'#2a2420', size:4, wiggle:2.2, pixel:6,
-  amp:7, wavelen:18, shape:'zigzag', fps:10, playing:true, paper:'plain'
+  amp:7, wavelen:18, shape:'zigzag', fps:10, playing:true, paper:'plain', flow:.55
 };
 let strokes = [], undoStack = [], redoStack = [];
 // ในห้องวาดกับเพื่อน ทุกเครื่องเห็นกระดาษสี่เหลี่ยมจัตุรัสแผ่นเดียวกัน (BOARD x BOARD หน่วย) ย่อขยายให้พอดีจอ
 const BOARD = 1000;
 let VS = 1, OX = 0, OY = 0;
+// ซูมและเลื่อนกระดาษ: ZOOM คูณเพิ่มจากขนาดพอดีจอ, PX/PY คือระยะที่เลื่อนไป (หน่วยพิกเซลจอ)
+const ZMIN = .5, ZMAX = 5;
+let ZOOM = 1, PX = 0, PY = 0, paperDirty = true;
+const viewS = () => VS * ZOOM, viewX = () => OX + PX, viewY = () => OY + PY;
 const room = {active:false, code:null, slot:null, uid:null, fb:null, db:null, unsubs:[], live:new Map(),
   myUndo:[], myRedo:[], solo:null, meta:null, key:null, expireTimer:null, dropTimer:null, members:0, connected:false, lastLive:0, liveTimer:null, busy:false};
 let current = null, raw = null, activeId = null;
@@ -603,13 +649,146 @@ function buildWave(s, f){
 }
 function buildEraser(s){ return {main:curvePath(s.pts)}; }
 
+/* ---------- แปรงสีน้ำมัน ----------
+   ประทับลายปลายพู่กัน (ขอบขุย มีลายขนแปรง) เรียงตามเส้น แต่ละรอยโปร่งนิด ๆ ทาทับกันแล้วสีจึงซ้อนและไล่เข้ากันเอง */
+const PAINT_K = 2.5;          // แปรงสีน้ำมันใหญ่กว่าแปรงอื่น 2.5 เท่าที่ความหนาเท่ากัน
+const TIP = 128, TIP_VARIANTS = 4;
+const tipCache = [];
+function valueNoise(seed, cells){
+  const rnd = mulberry(seed), g = [];
+  for (let i = 0; i < (cells + 1) * (cells + 1); i++) g.push(rnd());
+  return (x, y) => {   // x, y อยู่ในช่วง 0..1
+    const fx = x * cells, fy = y * cells, ix = Math.min(cells - 1, Math.floor(fx)), iy = Math.min(cells - 1, Math.floor(fy));
+    const tx = fx - ix, ty = fy - iy, sx = tx*tx*(3 - 2*tx), sy = ty*ty*(3 - 2*ty), w = cells + 1;
+    const a = g[iy*w + ix], b = g[iy*w + ix + 1], c = g[(iy+1)*w + ix], d = g[(iy+1)*w + ix + 1];
+    return a + (b - a)*sx + (c - a)*sy + (a - b - c + d)*sx*sy;
+  };
+}
+function paintTip(v){
+  if (tipCache[v]) return tipCache[v];
+  const c = document.createElement('canvas'); c.width = c.height = TIP;
+  const g = c.getContext('2d'), im = g.createImageData(TIP, TIP), d = im.data;
+  const edgeN = valueNoise(101 + v, 7), grainN = valueNoise(202 + v, 44), rnd = mulberry(303 + v);
+  const rows = valueNoise(404 + v, 40);   // ลายขนแปรงวิ่งตามแนวนอน
+  for (let y = 0; y < TIP; y++) for (let x = 0; x < TIP; x++){
+    const u = x / TIP, w = y / TIP, nx = (x - TIP/2) / (TIP*.47), ny = (y - TIP/2) / (TIP*.3);
+    const dist = Math.sqrt(nx*nx + ny*ny) + (edgeN(u, w) - .5) * .6;
+    let a = 1 - Math.min(1, Math.max(0, (dist - .62) / .3));   // ขอบคมกว่าเดิม แต่ยังขุย ๆ
+    a = a*a*(3 - 2*a);
+    const bristle = rows(.5, w) * (.6 + .4 * rows(u * .2, w));
+    a *= .35 + .65 * bristle;                                   // ลายขนแปรงชัดขึ้น
+    a *= .45 + .55 * grainN(u, w);                              // เนื้อสีเป็นเม็ด ๆ
+    if (rnd() < .08 + dist * .25) a *= .15;   // จุดแห้งที่สีไม่ติด เยอะขึ้นตรงขอบ
+    d[(y*TIP + x)*4 + 3] = Math.max(0, Math.min(255, a * 255));
+  }
+  g.putImageData(im, 0, 0);
+  return tipCache[v] = c;
+}
+const spriteCache = new Map();
+function shade(hex, t){   // t: 0 สีเดิม, 1 อ่อนลง, 2 เข้มขึ้น
+  const n = parseInt(hex.slice(1), 16), r = n >> 16, g = n >> 8 & 255, b = n & 255;
+  const mix = t === 1 ? [255, .2] : t === 2 ? [0, .16] : [0, 0];
+  const f = c => Math.round(c + (mix[0] - c) * mix[1]);
+  return `rgb(${f(r)},${f(g)},${f(b)})`;
+}
+function paintSprite(color, v, t){
+  const key = color + v + t;
+  let c = spriteCache.get(key);
+  if (c) return c;
+  if (spriteCache.size > 120) spriteCache.delete(spriteCache.keys().next().value);
+  c = document.createElement('canvas'); c.width = c.height = TIP;
+  const g = c.getContext('2d');
+  g.drawImage(paintTip(v), 0, 0);
+  g.globalCompositeOperation = 'source-in';
+  g.fillStyle = shade(color, t); g.fillRect(0, 0, TIP, TIP);
+  spriteCache.set(key, c);
+  return c;
+}
+function buildPaint(s, v){
+  const p = s.pts, n = p.length, stamps = [];
+  const step = Math.max(1, Math.round(s.size * .14 / 3));   // จุดบนเส้นห่างกัน 3 หน่วย
+  const shimmer = s.size * .05 * (.3 + s.wiggle / 3);
+  for (let i = 0; i < n; i += step){
+    const a = p[Math.max(0, i - 2)], b = p[Math.min(n - 1, i + 2)];
+    const ang = Math.atan2(b.y - a.y, b.x - a.x);
+    const head = Math.min(1, (i + 1) / (n * .12 + 2)), tail = Math.min(1, (n - i) / (n * .18 + 2));
+    const taper = .35 + .65 * Math.min(head, tail);
+    stamps.push({
+      x:p[i].x + (hash(s.seed, i, v*3 + 1) - .5) * shimmer,
+      y:p[i].y + (hash(s.seed, i, v*3 + 2) - .5) * shimmer,
+      r:s.size * taper * (.85 + .3 * hash(s.seed + 2, i, 0)),
+      rot:ang + (hash(s.seed + 5, i, 0) - .5) * .5 + (hash(s.seed + 9, i, v) - .5) * .08 * s.wiggle,
+      a:s.flow * (.38 + .4 * hash(s.seed + 3, i, 0)),
+      v:Math.floor(hash(s.seed + 4, i, 0) * TIP_VARIANTS), t:Math.floor(hash(s.seed + 6, i, 0) * 3)
+    });
+  }
+  return {stamps};
+}
+// รวมรอยพู่กันทั้งเส้นเป็นภาพเดียว (ทำครั้งเดียวต่อเส้น) แล้ววาดภาพนั้นทุกเฟรม เร็วกว่าประทับทีละรอยมาก
+function bakePaint(s){
+  const {stamps} = buildPaint(s, 0);
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  for (const st of stamps){ x0 = Math.min(x0, st.x - st.r); y0 = Math.min(y0, st.y - st.r); x1 = Math.max(x1, st.x + st.r); y1 = Math.max(y1, st.y + st.r); }
+  const bw = Math.max(1, x1 - x0), bh = Math.max(1, y1 - y0);
+  // ความละเอียดของภาพ = ความคมที่เห็นบนจอตอนนี้ แต่ไม่เกิน 2048 จุดต่อด้าน และไม่เกิน 4 ล้านจุดทั้งภาพ (กันกินหน่วยความจำ)
+  const q = Math.max(.25, Math.min(DPR * viewS(), 2048 / Math.max(bw, bh), Math.sqrt(4e6 / (bw * bh))));
+  const c = document.createElement('canvas'); c.width = Math.ceil(bw * q); c.height = Math.ceil(bh * q);
+  const g = c.getContext('2d');
+  for (const st of stamps){
+    const k = q * st.r / (TIP * .47), cs = Math.cos(st.rot) * k, sn = Math.sin(st.rot) * k;
+    g.globalAlpha = st.a;
+    g.setTransform(cs, sn, -sn, cs, (st.x - x0) * q, (st.y - y0) * q);
+    g.drawImage(paintSprite(s.color, st.v, st.t), -TIP/2, -TIP/2);
+  }
+  return {img:c, x:x0, y:y0, w:bw, h:bh, q};
+}
+function drawPaintImage(s, b){
+  // ภาพทั้งเส้นขยับเล็กน้อยตามจังหวะ ให้ยุกยิกเหมือนแปรงอื่น
+  const j = s.size * .025 * s.wiggle;
+  ctx.drawImage(b.img, b.x + (hash(s.seed, bf, 7) - .5) * j, b.y + (hash(s.seed, bf, 8) - .5) * j, b.w, b.h);
+}
+let liveLayer = null;
+function drawPaint(s, g){
+  const k0 = DPR * viewS(), ox = DPR * viewX(), oy = DPR * viewY();
+  if (s === current){
+    // เส้นที่กำลังวาด: เก็บรอยที่วาดไปแล้วไว้ในชั้นของตัวเอง เติมเฉพาะรอยใหม่
+    const view = [inkC.width, inkC.height, k0, ox, oy, s.color].join('|');
+    if (!liveLayer || liveLayer.stroke !== s || liveLayer.view !== view){
+      const c = liveLayer && liveLayer.c.width === inkC.width && liveLayer.c.height === inkC.height ? liveLayer.c : document.createElement('canvas');
+      c.width = inkC.width; c.height = inkC.height;
+      liveLayer = {c, g:c.getContext('2d'), stroke:s, view, done:0};
+    }
+    const L = liveLayer;
+    for (let i = L.done; i < g.stamps.length - 1; i++){   // รอยสุดท้ายยังขยับได้ เลยยังไม่วาดลงชั้น
+      const st = g.stamps[i], k = k0 * st.r / (TIP * .47), c = Math.cos(st.rot) * k, sn = Math.sin(st.rot) * k;
+      L.g.globalAlpha = st.a;
+      L.g.setTransform(c, sn, -sn, c, ox + k0 * st.x, oy + k0 * st.y);
+      L.g.drawImage(paintSprite(s.color, st.v, st.t), -TIP/2, -TIP/2);
+    }
+    L.done = Math.max(L.done, g.stamps.length - 1);
+    ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1;
+    ctx.drawImage(L.c, 0, 0);
+    return;
+  }
+  // เส้นสดของเพื่อนในห้อง: วาดทีละรอย (ข้ามบางรอยเพื่อความเร็ว)
+  const skip = g.stamps.length > 300 ? 2 : 1;
+  for (let n = 0; n < g.stamps.length; n += skip){
+    const st = g.stamps[n];
+    const k = k0 * st.r / (TIP * .47), c = Math.cos(st.rot) * k, sn = Math.sin(st.rot) * k;
+    ctx.globalAlpha = Math.min(1, st.a * skip);
+    ctx.setTransform(c, sn, -sn, c, ox + k0 * st.x, oy + k0 * st.y);
+    ctx.drawImage(paintSprite(s.color, st.v, st.t), -TIP/2, -TIP/2);
+  }
+}
+
 function geom(s, bf, wf, live){
-  const key = s.type === 'wave' ? 'w' + wf : (s.type === 'eraser' ? 'e' : 'b' + bf);
+  const key = s.type === 'wave' ? 'w' + wf : (s.type === 'eraser' || s.type === 'paint') ? 'e' : 'b' + bf;
   if (!live && s.cache[key]) return s.cache[key];
   let g;
   if (s.type === 'pencil') g = buildPencil(s, bf);
   else if (s.type === 'pixel') g = buildPixel(s, bf);
   else if (s.type === 'wave') g = buildWave(s, wf);
+  else if (s.type === 'paint') g = live ? buildPaint(s, 0) : {bake:bakePaint(s)};
   else g = buildEraser(s);
   if (!live) s.cache[key] = g;
   return g;
@@ -624,7 +803,7 @@ function drawStroke(s, live){
   switch (s.type){
     case 'pencil': {
       const pat = grain(s.color);
-      if (pat.setTransform) pat.setTransform(new DOMMatrix().translateSelf(bf*37, bf*23).scaleSelf(1/(DPR*VS), 1/(DPR*VS)));
+      if (pat.setTransform) pat.setTransform(new DOMMatrix().translateSelf(bf*37, bf*23).scaleSelf(1/(DPR*viewS()), 1/(DPR*viewS())));
       ctx.strokeStyle = pat;
       ctx.lineWidth = s.size; ctx.stroke(g.main);
       ctx.globalAlpha = .42; ctx.lineWidth = Math.max(.8, s.size * .5); ctx.stroke(g.ghost);
@@ -636,6 +815,9 @@ function drawStroke(s, live){
       ctx.strokeStyle = s.color; ctx.lineWidth = s.size;
       if (s.shape === 'zigzag'){ ctx.lineJoin = 'miter'; ctx.miterLimit = 3; }
       ctx.stroke(g.main); break;
+    case 'paint':
+      if (g.bake) drawPaintImage(s, g.bake); else drawPaint(s, g, live);
+      break;
     case 'eraser':
       ctx.globalCompositeOperation = 'destination-out';
       ctx.strokeStyle = '#000'; ctx.lineWidth = s.size; ctx.stroke(g.main); break;
@@ -645,7 +827,8 @@ function drawStroke(s, live){
 function render(){
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.clearRect(0, 0, inkC.width, inkC.height);
-  ctx.setTransform(DPR*VS, 0, 0, DPR*VS, DPR*OX, DPR*OY);
+  const S = viewS();
+  ctx.setTransform(DPR*S, 0, 0, DPR*S, DPR*viewX(), DPR*viewY());
   if (room.active){ ctx.save(); ctx.beginPath(); ctx.rect(0, 0, BOARD, BOARD); ctx.clip(); }
   for (const s of strokes) drawStroke(s, false);
   if (room.active) for (const s of room.live.values()) drawStroke(s, true);
@@ -654,12 +837,12 @@ function render(){
     ctx.restore();
     // หรี่พื้นที่นอกกระดาษของห้อง และตีกรอบให้เห็นขอบ
     ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-    const bw = BOARD*VS;
-    ctx.beginPath(); ctx.rect(0, 0, W, H); ctx.rect(OX, OY, bw, bw);
+    const bw = BOARD*S, bx = viewX(), by = viewY();
+    ctx.beginPath(); ctx.rect(0, 0, W, H); ctx.rect(bx, by, bw, bw);
     ctx.fillStyle = PAPERS[state.paper].dark ? 'rgba(0,0,0,.35)' : 'rgba(60,40,20,.13)';
     ctx.fill('evenodd');
     ctx.strokeStyle = PAPERS[state.paper].dark ? 'rgba(255,255,255,.35)' : 'rgba(42,36,32,.35)';
-    ctx.setLineDash([6, 5]); ctx.lineWidth = 1.2; ctx.strokeRect(OX + .5, OY + .5, bw - 1, bw - 1); ctx.setLineDash([]);
+    ctx.setLineDash([6, 5]); ctx.lineWidth = 1.2; ctx.strokeRect(bx + .5, by + .5, bw - 1, bw - 1); ctx.setLineDash([]);
   }
 }
 let lastKey = '';
@@ -670,6 +853,7 @@ function loop(now){
     bf = Math.floor(t * state.fps) % BOIL;
     wf = Math.floor(t * state.fps * 2) % WAVE_FRAMES;
   }
+  if (paperDirty){ drawPaper(); paperDirty = false; }
   const key = bf + '|' + wf;
   if (dirty || key !== lastKey){
     try { render(); } catch (err) { console.error(err); }
@@ -677,96 +861,113 @@ function loop(now){
   }
 }
 
-/* ---------- papers ---------- */
+/* ---------- papers ----------
+   ลายกระดาษวาดตามพิกัดบนกระดาษ (r = พื้นที่ที่มองเห็น, s = ขนาดซูม) จึงซูมและเลื่อนไปพร้อมเส้น
+   เส้นบรรทัดหนา 1 พิกเซลจอเสมอ ไม่ว่าจะซูมแค่ไหน */
 const noiseTiles = {};
-function noisePattern(g, name, alpha, light){
-  const id = name + alpha + light;
+function noisePattern(g, alpha, light, s){
+  const id = alpha + '|' + light;
   if (!noiseTiles[id]){
     const c = document.createElement('canvas'); c.width = c.height = 160;
     const x = c.getContext('2d'), im = x.createImageData(160, 160), d = im.data, r = mulberry(7);
-    for (let i = 0; i < d.length; i += 4){
-      const v = light ? 255 : 0; d[i] = d[i+1] = d[i+2] = v; d[i+3] = r() * alpha * 255;
-    }
+    for (let i = 0; i < d.length; i += 4){ const v = light ? 255 : 0; d[i] = d[i+1] = d[i+2] = v; d[i+3] = r() * alpha * 255; }
     x.putImageData(im, 0, 0); noiseTiles[id] = c;
   }
-  return g.createPattern(noiseTiles[id], 'repeat');
+  const p = g.createPattern(noiseTiles[id], 'repeat');
+  if (p.setTransform) p.setTransform(new DOMMatrix().scaleSelf(1/s, 1/s));   // เม็ดเกรนขนาดเท่าเดิมบนจอ
+  return p;
 }
-function grainFill(g, w, h, alpha, light){ g.fillStyle = noisePattern(g, 'n', alpha, light); g.fillRect(0, 0, w, h); }
-function fibers(g, w, h, n, color, seed){
-  const r = mulberry(seed); g.strokeStyle = color; g.lineWidth = .7;
-  for (let i = 0; i < n; i++){
-    const x = r()*w, y = r()*h, a = r()*Math.PI*2, l = 4 + r()*14;
-    g.globalAlpha = .15 + r()*.3;
-    g.beginPath(); g.moveTo(x, y); g.quadraticCurveTo(x + Math.cos(a+.6)*l*.5, y + Math.sin(a+.6)*l*.5, x + Math.cos(a)*l, y + Math.sin(a)*l); g.stroke();
+const area = (g, r, color) => { g.fillStyle = color; g.fillRect(r.x0, r.y0, r.x1 - r.x0, r.y1 - r.y0); };
+const grainFill = (g, r, s, alpha, light) => { g.fillStyle = noisePattern(g, alpha, light, s); g.fillRect(r.x0, r.y0, r.x1 - r.x0, r.y1 - r.y0); };
+function gridLines(g, r, step, color, lw, offset = 0, vertical = true, horizontal = true){
+  g.strokeStyle = color; g.lineWidth = lw; g.beginPath();
+  if (vertical) for (let x = Math.ceil((r.x0 - offset) / step) * step + offset; x <= r.x1; x += step){ g.moveTo(x, r.y0); g.lineTo(x, r.y1); }
+  if (horizontal) for (let y = Math.ceil((r.y0 - offset) / step) * step + offset; y <= r.y1; y += step){ g.moveTo(r.x0, y); g.lineTo(r.x1, y); }
+  g.stroke();
+}
+// ของที่วางแบบสุ่ม (เส้นใย รอยเปื้อน) แบ่งเป็นช่อง แต่ละช่องสุ่มด้วยเลขประจำช่อง เลื่อนไปมาแล้วลายไม่เปลี่ยน
+function forTiles(r, size, salt, fn){
+  const tx0 = Math.floor(r.x0 / size), tx1 = Math.floor(r.x1 / size), ty0 = Math.floor(r.y0 / size), ty1 = Math.floor(r.y1 / size);
+  if ((tx1 - tx0 + 1) * (ty1 - ty0 + 1) > 4000) return;
+  for (let ty = ty0; ty <= ty1; ty++) for (let tx = tx0; tx <= tx1; tx++) fn(tx * size, ty * size, mulberry((hash(tx, ty, salt) * 4294967296) | 0));
+}
+function fibers(g, r, color, perTile, salt){
+  g.strokeStyle = color; g.lineWidth = .7;
+  for (let band = 0; band < 3; band++){
+    g.globalAlpha = .15 + band * .12; g.beginPath();
+    forTiles(r, 160, salt + band, (ox, oy, rnd) => {
+      for (let i = 0; i < perTile; i++){
+        const x = ox + rnd()*160, y = oy + rnd()*160, a = rnd()*Math.PI*2, l = 4 + rnd()*14;
+        g.moveTo(x, y); g.quadraticCurveTo(x + Math.cos(a+.6)*l*.5, y + Math.sin(a+.6)*l*.5, x + Math.cos(a)*l, y + Math.sin(a)*l);
+      }
+    });
+    g.stroke();
   }
   g.globalAlpha = 1;
 }
-function gridLines(g, w, h, step, color, lw, offX = 0, offY = 0){
-  g.strokeStyle = color; g.lineWidth = lw; g.beginPath();
-  for (let x = offX; x <= w; x += step){ g.moveTo(Math.round(x) + .5, 0); g.lineTo(Math.round(x) + .5, h); }
-  for (let y = offY; y <= h; y += step){ g.moveTo(0, Math.round(y) + .5); g.lineTo(w, Math.round(y) + .5); }
-  g.stroke();
+function blots(g, r, size, salt, chance, minR, maxR, color){
+  forTiles(r, size, salt, (ox, oy, rnd) => {
+    if (rnd() > chance) return;
+    const x = ox + rnd()*size, y = oy + rnd()*size, rad = minR + rnd()*(maxR - minR), sg = g.createRadialGradient(x, y, 0, x, y, rad);
+    sg.addColorStop(0, color); sg.addColorStop(1, color.replace(/[\d.]+\)$/, '0)'));
+    g.fillStyle = sg; g.fillRect(x - rad, y - rad, rad*2, rad*2);
+  });
 }
 const PAPERS = {
-  plain:{name:'ขาว', dark:false, draw(g, w, h){ g.fillStyle = '#fdfbf6'; g.fillRect(0, 0, w, h); grainFill(g, w, h, .035); }},
-  lined:{name:'สมุด', dark:false, draw(g, w, h){
-    g.fillStyle = '#fffdf5'; g.fillRect(0, 0, w, h); grainFill(g, w, h, .03);
-    g.strokeStyle = '#bcd3ea'; g.lineWidth = 1; g.beginPath();
-    for (let y = 70; y <= h; y += 30){ g.moveTo(0, y + .5); g.lineTo(w, y + .5); } g.stroke();
-    g.strokeStyle = '#f0a0a0'; g.lineWidth = 1.5; g.beginPath(); g.moveTo(62, 0); g.lineTo(62, h); g.stroke();
+  plain:{name:'ขาว', dark:false, draw(g, r, s){ area(g, r, '#fdfbf6'); grainFill(g, r, s, .035); }},
+  lined:{name:'สมุด', dark:false, draw(g, r, s){
+    area(g, r, '#fffdf5'); grainFill(g, r, s, .03);
+    gridLines(g, r, 30, '#bcd3ea', 1/s, 10, false, true);
+    if (r.x0 <= 62 && r.x1 >= 62){ g.strokeStyle = '#f0a0a0'; g.lineWidth = 1.5/s; g.beginPath(); g.moveTo(62, r.y0); g.lineTo(62, r.y1); g.stroke(); }
   }},
-  grid:{name:'ตาราง', dark:false, draw(g, w, h){
-    g.fillStyle = '#fbfcf8'; g.fillRect(0, 0, w, h); grainFill(g, w, h, .03);
-    gridLines(g, w, h, 20, '#e2ebf1', 1); gridLines(g, w, h, 100, '#c6d7e3', 1);
+  grid:{name:'ตาราง', dark:false, draw(g, r, s){
+    area(g, r, '#fbfcf8'); grainFill(g, r, s, .03);
+    gridLines(g, r, 20, '#e2ebf1', 1/s); gridLines(g, r, 100, '#c6d7e3', 1/s);
   }},
-  dots:{name:'จุด', dark:false, draw(g, w, h){
-    g.fillStyle = '#fcf9f3'; g.fillRect(0, 0, w, h); grainFill(g, w, h, .03);
-    g.fillStyle = '#c6bcae';
-    for (let y = 22; y < h; y += 22) for (let x = 22; x < w; x += 22){ g.beginPath(); g.arc(x, y, 1.3, 0, Math.PI*2); g.fill(); }
+  dots:{name:'จุด', dark:false, draw(g, r, s){
+    area(g, r, '#fcf9f3'); grainFill(g, r, s, .03);
+    if ((r.x1 - r.x0) * (r.y1 - r.y0) / 484 > 60000) return;   // ซูมออกไกลมาก ไม่ต้องวาดจุด
+    g.fillStyle = '#c6bcae'; g.beginPath();
+    const rad = Math.max(1.3, .7/s);
+    for (let y = Math.ceil(r.y0/22)*22; y <= r.y1; y += 22) for (let x = Math.ceil(r.x0/22)*22; x <= r.x1; x += 22){ g.moveTo(x + rad, y); g.arc(x, y, rad, 0, Math.PI*2); }
+    g.fill();
   }},
-  kraft:{name:'คราฟท์', dark:false, draw(g, w, h){
-    g.fillStyle = '#c8a273'; g.fillRect(0, 0, w, h); grainFill(g, w, h, .09); grainFill(g, w, h, .05, true);
-    fibers(g, w, h, Math.round(w*h/900), '#8b6538', 3); fibers(g, w, h, Math.round(w*h/1800), '#ead1ae', 9);
+  kraft:{name:'คราฟท์', dark:false, draw(g, r, s){
+    area(g, r, '#c8a273'); grainFill(g, r, s, .09); grainFill(g, r, s, .05, true);
+    fibers(g, r, '#8b6538', 10, 3); fibers(g, r, '#ead1ae', 5, 9);
   }},
-  old:{name:'กระดาษเก่า', dark:false, draw(g, w, h){
-    g.fillStyle = '#f1e2c2'; g.fillRect(0, 0, w, h);
+  old:{name:'กระดาษเก่า', dark:false, draw(g, r, s){
+    area(g, r, '#f1e2c2'); blots(g, r, 300, 5, .55, 20, 90, 'rgba(150,100,40,.10)'); grainFill(g, r, s, .06);
+  }, screen(g, w, h){
+    // ขอบเข้มแบบกระดาษเก่า อยู่กับจอ ไม่ซูมตาม
     const rg = g.createRadialGradient(w/2, h/2, Math.min(w, h)*.25, w/2, h/2, Math.max(w, h)*.75);
     rg.addColorStop(0, 'rgba(120,80,30,0)'); rg.addColorStop(1, 'rgba(120,80,30,.28)');
     g.fillStyle = rg; g.fillRect(0, 0, w, h);
-    const r = mulberry(5);
-    for (let i = 0; i < Math.max(3, w*h/90000); i++){
-      const x = r()*w, y = r()*h, rad = 20 + r()*70, sg = g.createRadialGradient(x, y, 0, x, y, rad);
-      sg.addColorStop(0, 'rgba(150,100,40,.10)'); sg.addColorStop(1, 'rgba(150,100,40,0)'); g.fillStyle = sg; g.fillRect(x-rad, y-rad, rad*2, rad*2);
-    }
-    grainFill(g, w, h, .06);
   }},
-  chalk:{name:'กระดานดำ', dark:true, draw(g, w, h){
-    g.fillStyle = '#2d3a33'; g.fillRect(0, 0, w, h);
-    const r = mulberry(11);
-    for (let i = 0; i < Math.max(4, w*h/60000); i++){
-      const x = r()*w, y = r()*h, rad = 60 + r()*160, sg = g.createRadialGradient(x, y, 0, x, y, rad);
-      sg.addColorStop(0, 'rgba(255,255,255,.045)'); sg.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = sg; g.fillRect(x-rad, y-rad, rad*2, rad*2);
-    }
-    grainFill(g, w, h, .06, true); grainFill(g, w, h, .12);
+  chalk:{name:'กระดานดำ', dark:true, draw(g, r, s){
+    area(g, r, '#2d3a33'); blots(g, r, 380, 11, .6, 60, 220, 'rgba(255,255,255,.045)');
+    grainFill(g, r, s, .06, true); grainFill(g, r, s, .12);
   }},
-  blue:{name:'พิมพ์เขียว', dark:true, draw(g, w, h){
-    g.fillStyle = '#1d4f8f'; g.fillRect(0, 0, w, h); grainFill(g, w, h, .05, true);
-    gridLines(g, w, h, 20, 'rgba(255,255,255,.10)', 1); gridLines(g, w, h, 100, 'rgba(255,255,255,.24)', 1);
+  blue:{name:'พิมพ์เขียว', dark:true, draw(g, r, s){
+    area(g, r, '#1d4f8f'); grainFill(g, r, s, .05, true);
+    gridLines(g, r, 20, 'rgba(255,255,255,.10)', 1/s); gridLines(g, r, 100, 'rgba(255,255,255,.24)', 1/s);
   }}
 };
 function drawPaper(){
+  const S = viewS(), ox = viewX(), oy = viewY(), p = PAPERS[state.paper];
   pctx.setTransform(1, 0, 0, 1, 0, 0);
   pctx.clearRect(0, 0, paperC.width, paperC.height);
-  pctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-  PAPERS[state.paper].draw(pctx, W, H);
-  $('#empty').classList.toggle('dark', PAPERS[state.paper].dark);
+  pctx.setTransform(DPR*S, 0, 0, DPR*S, DPR*ox, DPR*oy);
+  p.draw(pctx, {x0:-ox/S, y0:-oy/S, x1:(W - ox)/S, y1:(H - oy)/S}, S);
+  if (p.screen){ pctx.setTransform(DPR, 0, 0, DPR, 0, 0); p.screen(pctx, W, H); }
+  $('#empty').classList.toggle('dark', p.dark);
 }
 function buildPaperPicker(){
   const wrap = $('#papers');
   for (const [id, p] of Object.entries(PAPERS)){
     const b = document.createElement('button'); b.className = 'paper'; b.dataset.paper = id; b.title = p.name;
     const c = document.createElement('canvas'); c.width = c.height = 120;
-    const g = c.getContext('2d'); g.scale(.5, .5); p.draw(g, 240, 240);
+    const g = c.getContext('2d'); g.scale(.5, .5); p.draw(g, {x0:0, y0:0, x1:240, y1:240}, .5); if (p.screen) p.screen(g, 240, 240);
     const s = document.createElement('span'); s.textContent = p.name;
     b.append(c, s); wrap.append(b);
     b.addEventListener('click', () => setPaper(id));
@@ -796,19 +997,55 @@ function resize(){
     OY = top + ((H - top - bottom) - BOARD*VS) / 2;
   } else { VS = 1; OX = 0; OY = 0; }
   for (const c of [paperC, inkC]){ c.width = Math.round(W*DPR); c.height = Math.round(H*DPR); }
-  drawPaper(); dirty = true;
+  clampPan(); drawPaper(); dirty = true;
+}
+
+/* ---------- zoom & pan ---------- */
+// ไม่ให้เลื่อนจนกระดาษหลุดจอไปหมด ต้องเห็นอย่างน้อย 80 พิกเซล
+function clampPan(){
+  const S = viewS(), cw = (room.active ? BOARD : W / VS) * S, ch = (room.active ? BOARD : H / VS) * S, m = 80;
+  PX = Math.min(W - m - OX, Math.max(m - OX - cw, PX));
+  PY = Math.min(H - m - OY, Math.max(m - OY - ch, PY));
+}
+function viewChanged(){ clampPan(); dirty = true; paperDirty = true; updateZoomUI(); scheduleSharpen(); }
+// ซูมเข้าแล้วหยุดสักครู่ ให้ทำภาพเส้นสีน้ำมันใหม่ให้คมตามระดับซูม
+let sharpenT;
+function scheduleSharpen(){
+  clearTimeout(sharpenT);
+  sharpenT = setTimeout(() => {
+    if (gesture) return scheduleSharpen();
+    const need = DPR * viewS();
+    for (const s of strokes){
+      const b = s.type === 'paint' && s.cache.e && s.cache.e.bake;
+      if (b && b.q < need / 1.4 && b.img.width < 2048 && b.img.height < 2048 && b.img.width * b.img.height < 4e6 * .9) delete s.cache.e;
+    }
+    dirty = true;
+  }, 300);
+}
+function zoomAt(sx, sy, factor){
+  const z = Math.min(ZMAX, Math.max(ZMIN, ZOOM * factor));
+  const wx = (sx - viewX()) / viewS(), wy = (sy - viewY()) / viewS();   // จุดบนกระดาษใต้เคอร์เซอร์ต้องอยู่ที่เดิม
+  ZOOM = z; PX = sx - OX - wx * viewS(); PY = sy - OY - wy * viewS();
+  viewChanged();
+}
+function panBy(dx, dy){ PX += dx; PY += dy; viewChanged(); }
+function resetView(){ ZOOM = 1; PX = 0; PY = 0; viewChanged(); }
+function updateZoomUI(){
+  const pct = Math.round(ZOOM * 100) + '%';
+  $('#zoomPct').textContent = pct; $('#zoomChip').textContent = pct;
+  $('#zoomChip').hidden = Math.abs(ZOOM - 1) < .01 && Math.abs(PX) < 1 && Math.abs(PY) < 1;
 }
 new ResizeObserver(resize).observe(stage);
 
 /* ---------- input ---------- */
 function spos(e){ const r = inkC.getBoundingClientRect(); return {x:e.clientX - r.left, y:e.clientY - r.top}; }
-function pos(e){ const p = spos(e); return {x:(p.x - OX) / VS, y:(p.y - OY) / VS}; }
+function pos(e){ const p = spos(e); return {x:(p.x - viewX()) / viewS(), y:(p.y - viewY()) / viewS()}; }
 function newStroke(){
   const t = state.brush;
   return {
-    type:t, color:state.color, size:(t === 'eraser' ? Math.max(8, state.size*3) : state.size) / VS,
-    seed:(Math.random()*1e9)|0, wiggle:state.wiggle, pixel:state.pixel / VS,
-    amp:state.amp / VS, wavelen:state.wavelen / VS, shape:state.shape, pts:[], wpts:[], cache:{}
+    type:t, color:state.color, size:(t === 'eraser' ? Math.max(8, state.size*3) : t === 'paint' ? state.size*PAINT_K : state.size) / viewS(), flow:state.flow,
+    seed:(Math.random()*1e9)|0, wiggle:state.wiggle, pixel:state.pixel / viewS(),
+    amp:state.amp / viewS(), wavelen:state.wavelen / viewS(), shape:state.shape, pts:[], wpts:[], cache:{}
   };
 }
 function onBoard(s){
@@ -819,8 +1056,36 @@ function prepare(s, source){
   s.pts = resample(source, 3);
   if (s.type === 'wave') s.wpts = resample(s.pts, 1);
 }
+const touches = new Map();   // นิ้วที่แตะจออยู่
+let gesture = null, panDrag = null;
+function cancelStroke(){
+  if (!current) return;
+  current = null; raw = null; activeId = null; dirty = true;
+  if (room.active && room.fb){ clearTimeout(room.liveTimer); room.liveTimer = null; room.fb.remove(R(`rooms/${room.code}/live/${room.uid}`)).catch(() => {}); }
+}
+function gestureState(){
+  const [a, b] = [...touches.values()];
+  return {d:Math.max(1, Math.hypot(a.x - b.x, a.y - b.y)), mx:(a.x + b.x)/2, my:(a.y + b.y)/2};
+}
 inkC.addEventListener('pointerdown', e => {
-  if (e.button > 0 || current) return;
+  if (e.pointerType === 'touch'){
+    touches.set(e.pointerId, spos(e));
+    if (touches.size >= 2){
+      // นิ้วที่สองมาถึง: ยกเลิกเส้นที่เพิ่งเริ่ม แล้วเปลี่ยนเป็นซูม/เลื่อน
+      cancelStroke();
+      try { inkC.setPointerCapture(e.pointerId); } catch (_) {}
+      const g = gestureState();
+      gesture = {d0:g.d, mx:g.mx, my:g.my, z0:ZOOM, wx:(g.mx - viewX()) / viewS(), wy:(g.my - viewY()) / viewS()};
+      return;
+    }
+  }
+  if (e.button === 1){   // ปุ่มกลางเมาส์ ลากเพื่อเลื่อนกระดาษ
+    e.preventDefault();
+    try { inkC.setPointerCapture(e.pointerId); } catch (_) {}
+    const p = spos(e); panDrag = {id:e.pointerId, x:p.x, y:p.y, px:PX, py:PY};
+    return;
+  }
+  if (e.button > 0 || current || gesture) return;
   e.preventDefault();
   try { inkC.setPointerCapture(e.pointerId); } catch (_) {}
   activeId = e.pointerId;
@@ -829,17 +1094,48 @@ inkC.addEventListener('pointerdown', e => {
   moveCursor(e);
 });
 inkC.addEventListener('pointermove', e => {
+  if (e.pointerType === 'touch' && touches.has(e.pointerId)) touches.set(e.pointerId, spos(e));
+  if (gesture){
+    if (touches.size < 2) return;
+    const g = gestureState();
+    ZOOM = Math.min(ZMAX, Math.max(ZMIN, gesture.z0 * g.d / gesture.d0));
+    PX = g.mx - OX - gesture.wx * viewS(); PY = g.my - OY - gesture.wy * viewS();
+    viewChanged();
+    return;
+  }
+  if (panDrag && e.pointerId === panDrag.id){
+    const p = spos(e); PX = panDrag.px + p.x - panDrag.x; PY = panDrag.py + p.y - panDrag.y; viewChanged();
+    return;
+  }
   moveCursor(e);
   if (!current || e.pointerId !== activeId) return;
   const evs = e.getCoalescedEvents ? e.getCoalescedEvents() : [e];
   const list = evs.length ? evs : [e];
   for (const ev of list){
     const p = pos(ev), l = raw[raw.length-1];
-    if (Math.hypot(p.x - l.x, p.y - l.y) >= 1.2) raw.push(p);
+    if (Math.hypot(p.x - l.x, p.y - l.y) >= 1.2 / viewS()) raw.push(p);
   }
   prepare(current, smooth(raw)); dirty = true;
   if (room.active) roomSendLive();
 });
+function pointerEnd(e){
+  if (e.pointerType === 'touch'){
+    touches.delete(e.pointerId);
+    if (gesture && touches.size < 2){ gesture = null; return; }
+    if (gesture) return;
+  }
+  if (panDrag && e.pointerId === panDrag.id){ panDrag = null; return; }
+  finish(e);
+}
+// ลูกกลิ้ง/ทัชแพด: เลื่อนกระดาษ  |  Ctrl + ลูกกลิ้ง หรือหุบ/ถ่างบนทัชแพด: ซูม
+inkC.addEventListener('wheel', e => {
+  e.preventDefault();
+  const k = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? H : 1;
+  if (e.ctrlKey || e.metaKey){ const p = spos(e); zoomAt(p.x, p.y, Math.exp(-e.deltaY * k * .0025)); }
+  else if (e.shiftKey && !e.deltaX) panBy(-e.deltaY * k, 0);
+  else panBy(-e.deltaX * k, -e.deltaY * k);
+}, {passive:false});
+inkC.addEventListener('auxclick', e => { if (e.button === 1) e.preventDefault(); });
 function finish(e){
   if (!current || (e && e.pointerId !== activeId)) return;
   prepare(current, smooth(raw));
@@ -849,15 +1145,15 @@ function finish(e){
   current = null; raw = null; activeId = null;
   dirty = true; updateUI(); save();
 }
-inkC.addEventListener('pointerup', finish);
-inkC.addEventListener('pointercancel', finish);
-inkC.addEventListener('lostpointercapture', finish);
+inkC.addEventListener('pointerup', pointerEnd);
+inkC.addEventListener('pointercancel', pointerEnd);
+inkC.addEventListener('lostpointercapture', pointerEnd);
 
 const cursor = $('#cursor');
 function moveCursor(e){
   if (e.pointerType !== 'mouse'){ cursor.style.display = 'none'; return; }
   const p = spos(e);
-  const d = state.brush === 'eraser' ? Math.max(8, state.size*3) : Math.max(4, state.size + (state.brush === 'wave' ? state.amp*2 : 0));
+  const d = state.brush === 'eraser' ? Math.max(8, state.size*3) : state.brush === 'paint' ? state.size*PAINT_K*1.5 : Math.max(4, state.size + (state.brush === 'wave' ? state.amp*2 : 0));
   cursor.style.display = 'block';
   cursor.style.width = cursor.style.height = d + 'px';
   cursor.style.transform = `translate(${p.x - d/2}px, ${p.y - d/2}px)`;
@@ -906,7 +1202,7 @@ function setBrush(b){
   if (b !== 'eraser') lastInkBrush = b;
   document.querySelectorAll('.tool,.dtool').forEach(t => t.classList.toggle('on', t.dataset.brush === b));
   document.querySelectorAll('.opt').forEach(o => { o.hidden = !o.dataset.for.split(' ').includes(b); });
-  $('#colorSec').style.opacity = b === 'eraser' ? .45 : 1;
+  $('#colorSec .fold-body').style.opacity = b === 'eraser' ? .45 : 1;
   cursor.classList.toggle('square', b === 'pixel');
   save();
 }
@@ -945,13 +1241,21 @@ $('#mRedo').addEventListener('click', redo);
 $('#redoBtn').addEventListener('click', redo);
 $('#clearBtn').addEventListener('click', clearAll);
 $('#playBtn').addEventListener('click', () => setPlaying(!state.playing));
-function setFold(open){
-  $('#foldSec').classList.toggle('closed', !open);
-  $('#foldBtn').setAttribute('aria-expanded', open);
-  try { localStorage.setItem('yukyik-fold', open ? '1' : '0'); } catch (_) {}
+$('#zoomIn').addEventListener('click', () => zoomAt(W/2, H/2, 1.25));
+$('#zoomOut').addEventListener('click', () => zoomAt(W/2, H/2, 1/1.25));
+$('#zoomPct').addEventListener('click', resetView);
+$('#zoomChip').addEventListener('click', resetView);
+// พับเก็บแต่ละหมวด (สีเส้น ปรับเส้น เลือกกระดาษ) และจำไว้ว่าพับหมวดไหนอยู่
+function foldState(){ try { return JSON.parse(localStorage.getItem('yukyik-folds') || '{}') || {}; } catch (_) { return {}; } }
+function setFold(sec, open){
+  sec.classList.toggle('closed', !open);
+  sec.querySelector('.fold-head').setAttribute('aria-expanded', open);
+  try { const f = foldState(); f[sec.dataset.fold] = open; localStorage.setItem('yukyik-folds', JSON.stringify(f)); } catch (_) {}
 }
-$('#foldBtn').addEventListener('click', () => setFold($('#foldSec').classList.contains('closed')));
-try { if (localStorage.getItem('yukyik-fold') === '0') setFold(false); } catch (_) {}
+document.querySelectorAll('section.fold').forEach(sec => {
+  sec.querySelector('.fold-head').addEventListener('click', () => setFold(sec, sec.classList.contains('closed')));
+  if (foldState()[sec.dataset.fold] === false) setFold(sec, false);
+});
 /* แผ่นเครื่องมือบนมือถือ */
 const mq = window.matchMedia('(max-width:760px), (max-height:500px)');
 function openSheet(){ closeColorPop(); $('#panel').classList.add('open'); $('#backdrop').classList.add('show'); }
@@ -982,13 +1286,17 @@ function toast(msg){ const t = $('#toast'); t.textContent = msg; t.classList.add
 /* ---------- export ---------- */
 let lastBlob = null;
 $('#saveBtn').addEventListener('click', () => {
-  render();
+  // บันทึกที่ขนาดปกติเสมอ ไม่ว่าตอนนี้ซูมอยู่แค่ไหน แล้วค่อยคืนมุมมองเดิม
+  const saved = [ZOOM, PX, PY];
+  ZOOM = 1; PX = 0; PY = 0;
+  drawPaper(); render();
   // ในห้องบันทึกเฉพาะกระดาษสี่เหลี่ยมของห้อง ไม่เอาพื้นที่หรี่รอบ ๆ
   const sx = Math.round(OX*DPR), sy = Math.round(OY*DPR);
   const sw = room.active ? Math.round(BOARD*VS*DPR) : paperC.width, sh = room.active ? sw : paperC.height;
   const c = document.createElement('canvas'); c.width = sw; c.height = sh;
   const g = c.getContext('2d');
   g.drawImage(paperC, sx, sy, sw, sh, 0, 0, sw, sh); g.drawImage(inkC, sx, sy, sw, sh, 0, 0, sw, sh);
+  [ZOOM, PX, PY] = saved; paperDirty = true; dirty = true;
   const url = c.toDataURL('image/png');
   $('#outImg').src = url; $('#dlBtn').href = url;
   lastBlob = null; c.toBlob(b => { lastBlob = b; }, 'image/png');
@@ -1008,7 +1316,7 @@ $('#copyImg').addEventListener('click', async () => {
 /* ---------- วาดกับเพื่อน (Firebase Realtime Database) ---------- */
 const FB_VER = '12.4.0';
 const CODE_RE = /^[23456789ABCDEFGHJKMNPQRSTUVWXYZ]{6}$/;   // รหัสห้องและรหัสผ่าน 6 ตัว (ไม่มี 0 O 1 I L ที่สับสนง่าย)
-const TYPES = ['pencil','pixel','wave','eraser'], SHAPES = ['zigzag','sine','coil'];
+const TYPES = ['pencil','pixel','wave','paint','eraser'], SHAPES = ['zigzag','sine','coil'];
 const MAX_PTS = 5000, LIVE_PTS = 1500;
 
 function isFramed(){ try { return window.self !== window.top; } catch (_) { return true; } }
@@ -1051,6 +1359,7 @@ function encode(s, live){
     a:r2(clampN(s.amp, 0, 400, 7)), wl:r2(clampN(s.wavelen, 2, 800, 18)), sh:SHAPES.includes(s.shape) ? s.shape : 'zigzag',
     p:p.join(',')
   };
+  if (s.type === 'paint') d.fl = r2(clampN(s.flow, .05, 1, .55));
   if (!live) d.ts = room.fb.serverTimestamp();
   return d;
 }
@@ -1064,7 +1373,7 @@ function decode(d){
   if (!pts.length) return null;
   const s = {
     type:d.t, color:/^#[0-9a-f]{6}$/.test(d.c) ? d.c : '#2a2420', size:clampN(d.s, .05, 400, 4), seed:clampN(d.sd, -2e9, 2e9, 1)|0,
-    wiggle:clampN(d.w, 0, 10, 2), pixel:clampN(d.px, 2, 200, 6), amp:clampN(d.a, 0, 400, 7), wavelen:clampN(d.wl, 2, 800, 18),
+    wiggle:clampN(d.w, 0, 10, 2), pixel:clampN(d.px, 2, 200, 6), amp:clampN(d.a, 0, 400, 7), wavelen:clampN(d.wl, 2, 800, 18), flow:clampN(d.fl, .05, 1, .55),
     shape:SHAPES.includes(d.sh) ? d.sh : 'zigzag', uid:typeof d.u === 'string' ? d.u : '',
     pts:pts.length > 1 ? pts : [pts[0], {x:pts[0].x + .3, y:pts[0].y + .1}], wpts:[], cache:{}
   };
@@ -1115,16 +1424,18 @@ async function joinRoom(code, key){
   if (Date.now() > expiresAt(meta)) throw {code:'expired'};
   room.meta = meta; room.key = null;
   if (meta.private === true){
+    key = key || readSavedKey(code);   // เคยเข้าห้องนี้แล้ว ใช้รหัสที่จำไว้
     if (meta.owner !== room.uid){
       if (!key) throw {code:'need-key'};
       // เขียนรหัสผ่านลงที่ของตัวเอง กฎของฐานข้อมูลจะยอมก็ต่อเมื่อรหัสตรงกับของห้อง
       try { await fb.set(R(`rooms/${code}/keys/${room.uid}`), key); }
       catch (err) { if (errKey(err) === 'denied') throw {code:'wrong-key'}; throw err; }
     }
-    room.key = key || readOwnKey(code);
+    room.key = key;
   }
   const slot = await claimSlot(code);
   if (!slot) throw {code:'full'};
+  if (room.key) saveKey(code, room.key);   // จำไว้ กลับมาเข้าห้องนี้อีกจะได้ไม่ต้องพิมพ์ใหม่
   await enterRoom(code, slot);
 }
 async function enterRoom(code, slot){
@@ -1192,7 +1503,8 @@ async function enterRoom(code, slot){
   }));
 
   try { history.replaceState(null, '', '?room=' + code + (room.key ? '&key=' + room.key : '')); } catch (_) {}
-  resize(); updateUI(); updateRoomUI();
+  ZOOM = 1; PX = 0; PY = 0;
+  resize(); updateUI(); updateRoomUI(); updateZoomUI();
 }
 async function leaveRoom(){
   if (!room.active) return;
@@ -1211,7 +1523,8 @@ async function leaveRoom(){
   ({strokes, undoStack, redoStack} = room.solo); room.solo = null;
   current = null; raw = null; activeId = null;
   try { history.replaceState(null, '', location.pathname); } catch (_) {}
-  resize(); updateUI(); updateRoomUI();
+  ZOOM = 1; PX = 0; PY = 0;
+  resize(); updateUI(); updateRoomUI(); updateZoomUI();
 }
 
 /* ส่งเส้น */
@@ -1304,7 +1617,11 @@ function openRoomModal(){
 }
 function closeRoomModal(){ $('#roomModal').classList.remove('show'); }
 function roomLink(){ return location.origin + location.pathname + '?room=' + room.code + (room.key ? '&key=' + room.key : ''); }
-function readOwnKey(code){ try { return (JSON.parse(localStorage.getItem('yukyik-mykeys') || '{}'))[code] || null; } catch (_) { return null; } }
+// รหัสผ่านห้องส่วนตัวที่เคยเข้าสำเร็จ เก็บไว้ในเบราว์เซอร์นี้ (ใช้ร่วมกับหน้ารวมห้อง)
+const MYKEYS = 'yukyik-mykeys';
+function savedKeys(){ try { return JSON.parse(localStorage.getItem(MYKEYS) || '{}') || {}; } catch (_) { return {}; } }
+function readSavedKey(code){ const k = savedKeys()[code]; return CODE_RE.test(k) ? k : null; }
+function saveKey(code, key){ try { const k = savedKeys(); k[code] = key; localStorage.setItem(MYKEYS, JSON.stringify(k)); } catch (_) {} }
 function updateRoomUI(){
   const on = room.active;
   $('#roomBtn').classList.toggle('live', on);
@@ -1395,22 +1712,34 @@ function autoJoin(){
 /* ---------- keyboard ---------- */
 window.addEventListener('keydown', e => {
   if (e.target.tagName === 'INPUT' && e.target.type !== 'range') return;
-  const mod = e.ctrlKey || e.metaKey;
-  if (mod && e.key.toLowerCase() === 'z'){ e.preventDefault(); e.shiftKey ? redo() : undo(); return; }
-  if (mod && e.key.toLowerCase() === 'y'){ e.preventDefault(); redo(); return; }
-  if (mod) return;
-  if (e.key === '1') setBrush('pencil');
-  else if (e.key === '2') setBrush('pixel');
-  else if (e.key === '3') setBrush('wave');
-  else if (e.key === '4' || e.key.toLowerCase() === 'e') setBrush('eraser');
-  else if (e.key === '[') setRange('size', 'size', Math.max(1, state.size - 1));
-  else if (e.key === ']') setRange('size', 'size', Math.min(30, state.size + 1));
-  else if (e.key === ' '){
+  // ใช้ e.code (ตำแหน่งปุ่ม) แทน e.key เพราะตอนใช้แป้นภาษาไทย ปุ่ม Z จะได้ตัว "ผ" แทน "z"
+  const mod = e.ctrlKey || e.metaKey, c = e.code;
+  if (mod){
+    if (c === 'KeyZ'){ e.preventDefault(); e.shiftKey ? redo() : undo(); }
+    else if (c === 'KeyY'){ e.preventDefault(); redo(); }
+    else if (c === 'Equal' || c === 'NumpadAdd'){ e.preventDefault(); zoomAt(W/2, H/2, 1.25); }
+    else if (c === 'Minus' || c === 'NumpadSubtract'){ e.preventDefault(); zoomAt(W/2, H/2, 1/1.25); }
+    else if (c === 'Digit0' || c === 'Numpad0'){ e.preventDefault(); resetView(); }
+    return;
+  }
+  if (c === 'Digit1') setBrush('pencil');
+  else if (c === 'Digit2') setBrush('pixel');
+  else if (c === 'Digit3') setBrush('wave');
+  else if (c === 'Digit4') setBrush('paint');
+  else if (c === 'Digit5' || c === 'KeyE') setBrush('eraser');
+  else if (c === 'BracketLeft') setRange('size', 'size', Math.max(1, state.size - 1));
+  else if (c === 'BracketRight') setRange('size', 'size', Math.min(30, state.size + 1));
+  else if (c === 'Space'){
     e.preventDefault();
     if (document.activeElement && document.activeElement.tagName === 'BUTTON') document.activeElement.blur();
     setPlaying(!state.playing);
   }
-  else if (e.key === 'Escape'){ $('#modal').classList.remove('show'); closeRoomModal(); closeSheet(); closeColorPop(); }
+  else if (c === 'Escape' || e.key === 'Escape'){ $('#modal').classList.remove('show'); closeRoomModal(); closeSheet(); closeColorPop(); }
+  else if (c.startsWith('Arrow')){   // ลูกศรเลื่อนกระดาษ
+    e.preventDefault();
+    const d = e.shiftKey ? 200 : 60;
+    panBy(c === 'ArrowLeft' ? d : c === 'ArrowRight' ? -d : 0, c === 'ArrowUp' ? d : c === 'ArrowDown' ? -d : 0);
+  }
 });
 
 /* ---------- persistence (เฉพาะเบราว์เซอร์นี้) ---------- */
@@ -1421,8 +1750,8 @@ function save(){
   saveT = setTimeout(() => {
     try {
       const data = {
-        settings:{brush:state.brush, color:state.color, size:state.size, wiggle:state.wiggle, pixel:state.pixel, amp:state.amp, wavelen:state.wavelen, shape:state.shape, fps:state.fps, playing:state.playing, paper:state.paper},
-        strokes:(room.active ? room.solo.strokes : strokes).map(s => ({type:s.type, color:s.color, size:s.size, seed:s.seed, wiggle:s.wiggle, pixel:s.pixel, amp:s.amp, wavelen:s.wavelen, shape:s.shape,
+        settings:{brush:state.brush, color:state.color, size:state.size, flow:state.flow, wiggle:state.wiggle, pixel:state.pixel, amp:state.amp, wavelen:state.wavelen, shape:state.shape, fps:state.fps, playing:state.playing, paper:state.paper},
+        strokes:(room.active ? room.solo.strokes : strokes).map(s => ({type:s.type, color:s.color, size:s.size, seed:s.seed, wiggle:s.wiggle, pixel:s.pixel, amp:s.amp, wavelen:s.wavelen, shape:s.shape, flow:s.flow,
           pts:s.pts.map(p => [Math.round(p.x*10)/10, Math.round(p.y*10)/10])}))
       };
       localStorage.setItem(KEY, JSON.stringify(data));
@@ -1447,6 +1776,7 @@ function load(){
   state.amp = clampN(S.amp, 2, 26, state.amp);
   state.wavelen = clampN(S.wavelen, 6, 60, state.wavelen);
   state.fps = clampN(S.fps, 2, 24, state.fps);
+  state.flow = clampN(S.flow, .1, 1, state.flow);
   if (!Array.isArray(d.strokes)) return;
   strokes = [];
   for (const s of d.strokes){
@@ -1457,6 +1787,7 @@ function load(){
       type:s.type, color:/^#[0-9a-f]{6}$/.test(s.color) ? s.color : '#2a2420', size:clampN(s.size, .05, 400, 4),
       seed:clampN(s.seed, -2e9, 2e9, 1)|0, wiggle:clampN(s.wiggle, 0, 10, 2), pixel:clampN(s.pixel, 1, 200, 6),
       amp:clampN(s.amp, 0, 400, 7), wavelen:clampN(s.wavelen, 2, 800, 18), shape:SHAPES.includes(s.shape) ? s.shape : 'zigzag',
+      flow:clampN(s.flow, .05, 1, .55),
       pts:pts.length > 1 ? pts : resample(pts, 3), wpts:[], cache:{}
     };
     if (st.type === 'wave') st.wpts = resample(st.pts, 1);
@@ -1468,10 +1799,10 @@ function load(){
 load();
 buildSwatches(); buildPaperPicker();
 bindRange('size', 'size'); bindRange('wiggle', 'wiggle', v => (+v).toFixed(1)); bindRange('pixel', 'pixel');
-bindRange('amp', 'amp'); bindRange('wavelen', 'wavelen'); bindRange('fps', 'fps');
+bindRange('flow', 'flow', v => Math.round(v * 100) + '%'); bindRange('amp', 'amp'); bindRange('wavelen', 'wavelen'); bindRange('fps', 'fps');
 setColor(state.color); setBrush(state.brush); setShape(state.shape); setPlaying(state.playing);
 document.querySelectorAll('.paper').forEach(b => b.classList.toggle('on', b.dataset.paper === state.paper));
-resize(); updateUI(); updateRoomUI(); autoJoin();
+resize(); updateUI(); updateRoomUI(); updateZoomUI(); autoJoin();
 // ปุ่มดาวน์โหลดซ่อนไว้เมื่อเว็บถูกฝังในกรอบของเว็บอื่น เพราะดาวน์โหลดไม่ได้
 $('#dlBtn').hidden = isFramed();
 if (!isFramed()) document.querySelector('#modal .card p').innerHTML = 'กด “ดาวน์โหลด” เพื่อบันทึกรูป<br>หรือคลิกขวา (กดค้างบนมือถือ) ที่รูปแล้วเลือก “บันทึกรูปภาพ”';
