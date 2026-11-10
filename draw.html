@@ -56,7 +56,7 @@
     </section>
 
     <section class="fold" id="brushSec" data-fold="brush">
-      <button class="fold-head" aria-expanded="true"><h2>เลือกแปรง</h2><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 6 4 4 4-4"/></svg></button>
+      <button class="fold-head" aria-expanded="true"><h2>แปรงและเส้น</h2><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 6 4 4 4-4"/></svg></button>
       <div class="fold-body"><div class="fold-inner">
       <div class="brushes" id="brushes">
         <button class="tool on" data-brush="pencil" title="ดินสอยุกยิก (1)">
@@ -84,12 +84,9 @@
           <span>ยางลบ</span>
         </button>
       </div>
-    </div></div>
-    </section>
-
-
-    <section class="fold" id="lineSec" data-fold="line">
-      <button class="fold-head" aria-expanded="true"><h2>ปรับเส้น</h2><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 6 4 4 4-4"/></svg></button>
+    
+      <div class="fold sub line-sub" data-fold="line">
+      <button class="fold-head" aria-expanded="true"><span class="pk-label">ปรับเส้น</span><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 6 4 4 4-4"/></svg></button>
       <div class="fold-body"><div class="fold-inner">
       <div class="row"><span>ความหนาของเส้น</span><output id="sizeOut">4</output></div>
       <input type="range" id="size" min="1" max="30" step="1" value="4">
@@ -146,7 +143,12 @@
       <div class="row"><span>เส้นขยับเร็วแค่ไหน</span><output id="fpsOut">10</output></div>
       <input type="range" id="fps" min="2" max="24" step="1" value="10">
       </div></div>
+      </div>
+      </div></div>
     </section>
+
+
+
 
     <section class="fold" id="paperSec" data-fold="paper">
       <button class="fold-head" aria-expanded="true"><h2>เลือกกระดาษ</h2><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 6 4 4 4-4"/></svg></button>

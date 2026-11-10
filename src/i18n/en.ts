@@ -74,6 +74,7 @@ export const EN: Record<string, string> = {
   'ตามสายตา': 'Perceptual',
   'ความสว่าง': 'Brightness',
   'ชุดสี': 'Swatches',
+  'แปรงและเส้น': 'Brush',
   'สีที่เพิ่งใช้': 'Recent',
   'วาดแล้วสีจะมาอยู่ตรงนี้': 'Colors you use show up here',
   'สีที่บันทึกไว้': 'Saved',

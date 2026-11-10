@@ -117,6 +117,7 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
 .fold-head + .fold-body .fold-inner{padding-top:8px}
 .fold[hidden]{display:none}
 .fold.sub{margin-top:8px}
+.fold.line-sub{margin-top:14px;padding-top:10px;border-top:1px dashed var(--line,#e4d8c5)}
 .fold.sub > .fold-head .pk-label{margin:0}
 .fold.sub > .fold-head + .fold-body .fold-inner{padding-top:0}
 .fold.sub .fold-inner > .pk-label:first-child{margin-top:6px}
