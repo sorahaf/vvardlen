@@ -116,6 +116,10 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;bac
 .fold-inner{overflow:hidden;min-height:0;padding:0 2px}
 .fold-head + .fold-body .fold-inner{padding-top:8px}
 .fold[hidden]{display:none}
+.fold.sub{margin-top:8px}
+.fold.sub > .fold-head .pk-label{margin:0}
+.fold.sub > .fold-head + .fold-body .fold-inner{padding-top:0}
+.fold.sub .fold-inner > .pk-label:first-child{margin-top:6px}
 /* เลเยอร์ */
 .layer-tools{display:flex;gap:6px;margin-bottom:8px}
 .layer-tools button{flex:1;height:34px;border:1.5px solid var(--line);background:#fff;border-radius:10px;display:grid;place-items:center;cursor:pointer;touch-action:manipulation}

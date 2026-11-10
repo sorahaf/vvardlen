@@ -42,16 +42,22 @@
           <div class="seg pk-mode" id="pkMode"><button data-m="hsv">ปกติ</button><button data-m="ok">ตามสายตา</button></div>
           <div class="row"><span>ความสว่าง</span><output id="pkVOut">50%</output></div>
           <input type="range" id="pkV" class="pk-v" min="0" max="1" step="0.005" value="0.5" aria-label="ความสว่าง">
+          <div class="fold sub" data-fold="swatch">
+          <button class="fold-head" aria-expanded="true"><span class="pk-label">ชุดสี</span><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 6 4 4 4-4"/></svg></button>
+          <div class="fold-body"><div class="fold-inner">
           <div class="pk-label">สีที่เพิ่งใช้</div>
           <div class="mini-sw" id="recentSw"><span class="pk-empty">วาดแล้วสีจะมาอยู่ตรงนี้</span></div>
           <div class="pk-label pk-saved-head"><span>สีที่บันทึกไว้</span><span><button class="pk-link" id="saveColor">+ เก็บสีนี้</button><button class="pk-link" id="editSaved">ลบ</button></span></div>
           <div class="mini-sw" id="savedSw"></div>
+          </div></div>
+          </div>
         </div>
       </div></div>
     </section>
 
-    <section>
-      <h2>เลือกแปรง</h2>
+    <section class="fold" id="brushSec" data-fold="brush">
+      <button class="fold-head" aria-expanded="true"><h2>เลือกแปรง</h2><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 6 4 4 4-4"/></svg></button>
+      <div class="fold-body"><div class="fold-inner">
       <div class="brushes" id="brushes">
         <button class="tool on" data-brush="pencil" title="ดินสอยุกยิก (1)">
           <svg viewBox="0 0 80 28"><path d="M6 18 C14 7, 22 23, 32 13 S50 7, 58 15 S70 21, 74 11" fill="none" stroke="#2a2420" stroke-width="3" stroke-linecap="round"/><path d="M7 19.5 C15 9, 23 24, 33 14.5 S50 9, 59 16.5 S70 22, 73 13" fill="none" stroke="#2a2420" stroke-opacity=".35" stroke-width="1.4" stroke-linecap="round"/></svg>
@@ -78,6 +84,7 @@
           <span>ยางลบ</span>
         </button>
       </div>
+    </div></div>
     </section>
 
 

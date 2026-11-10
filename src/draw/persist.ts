@@ -2,7 +2,7 @@ import { G, room, state } from './core.js';
 import { SHAPES, TYPES, clampN, resample } from './util.js';
 import { PAPERS } from './paper.js';
 import { MAX_LAYERS, layerOf } from './layers.js';
-import { toast } from './ui.js';
+import { brushMem, toast } from './ui.js';
 import { pk } from './picker.js';
 import type { Layer, Stroke } from './types.js';
 
@@ -20,7 +20,7 @@ function saveNow(){
   {
     try {
       const data = {
-        settings:{brush:state.brush, color:state.color, pmode:pk.m, size:state.size, flow:state.flow, wiggle:state.wiggle, pixel:state.pixel, amp:state.amp, wavelen:state.wavelen, shape:state.shape, op:state.op, oc:state.oc, ow:state.ow, tip:state.tip, fps:state.fps, playing:state.playing, paper:state.paper},
+        settings:{brush:state.brush, color:state.color, pmode:pk.m, size:state.size, flow:state.flow, wiggle:state.wiggle, pixel:state.pixel, amp:state.amp, wavelen:state.wavelen, shape:state.shape, op:state.op, oc:state.oc, ow:state.ow, tip:state.tip, mem:{...brushMem, [state.brush]:{size:state.size, op:state.op, wiggle:state.wiggle}}, fps:state.fps, playing:state.playing, paper:state.paper},
         layers:G.layers.map(l => ({id:l.id, name:l.name, visible:l.visible, opacity:l.opacity})), active:G.activeLayer,
         strokes:(room.active && room.solo ? room.solo.strokes : G.strokes).map(s => ({type:s.type, color:s.color, size:s.size, seed:s.seed, wiggle:s.wiggle, pixel:s.pixel, amp:s.amp, wavelen:s.wavelen, shape:s.shape, flow:s.flow, op:s.op, oc:s.oc, ow:s.ow, pw:s.pw,
           layer:s.layer, iso:s.iso, isoA:s.isoA,
@@ -43,6 +43,10 @@ export function load(){
   if (SHAPES.includes(S.shape)) state.shape = S.shape;
   if (['ink','white','auto'].includes(S.oc)) state.oc = S.oc;
   if (S.tip === 'taper' || S.tip === 'round') state.tip = S.tip;
+  if (S.mem && typeof S.mem === 'object') for (const t of TYPES){
+    const m = S.mem[t];
+    if (m && typeof m === 'object') brushMem[t] = {size:clampN(m.size, 1, 30, 4), op:clampN(m.op, .05, 1, 1), wiggle:clampN(m.wiggle, 0, 10, 2.2)};
+  }
   state.op = clampN(S.op, .05, 1, state.op);
   state.ow = clampN(S.ow, 1, 10, state.ow);
   if (PAPERS[S.paper]) state.paper = S.paper;

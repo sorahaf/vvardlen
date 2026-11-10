@@ -19,7 +19,16 @@ export function setColor(c: string, keepBrush = false, fromPicker = false){
   save();
 }
 let lastInkBrush: InkBrush = 'pencil';
+/** แต่ละแปรงจำค่าของตัวเอง (ความหนา ความทึบ การสั่น) สลับแปรงแล้วค่าจะตามแปรงนั้น */
+export const brushMem: Partial<Record<BrushType, { size: number; op: number; wiggle: number }>> = {};
+const applyRange = (id: string, v: number) => { const e = $<HTMLInputElement>('#' + id); e.value = String(v); e.dispatchEvent(new Event('input')); };
 export function setBrush(b: BrushType){
+  const prev = state.brush;
+  if (prev !== b){
+    brushMem[prev] = {size:state.size, op:state.op, wiggle:state.wiggle};
+    const m = brushMem[b];
+    if (m){ applyRange('size', m.size); applyRange('op', m.op); applyRange('wiggle', m.wiggle); }
+  }
   state.brush = b;
   if (b !== 'eraser') lastInkBrush = b;
   document.querySelectorAll<HTMLElement>('.tool,.dtool').forEach(t => t.classList.toggle('on', t.dataset.brush === b));
@@ -111,7 +120,7 @@ export function initUi(){
   $('#zoomOut').addEventListener('click', () => zoomAt(G.W/2, G.H/2, 1/1.25));
   $('#zoomPct').addEventListener('click', resetView);
   $('#zoomChip').addEventListener('click', resetView);
-  document.querySelectorAll<HTMLElement>('section.fold').forEach(sec => {
+  document.querySelectorAll<HTMLElement>('.fold[data-fold]').forEach(sec => {
     sec.querySelector('.fold-head')!.addEventListener('click', () => setFold(sec, sec.classList.contains('closed')));
     if (foldState()[sec.dataset.fold || ''] === false) setFold(sec, false);
   });
