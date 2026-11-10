@@ -1,6 +1,7 @@
 {
   "name": "vvardlen",
   "private": true,
+  "license": "MIT",
   "description": "วาดเล่น: สมุดวาดรูปออนไลน์ เส้นขยับได้เอง",
   "type": "module",
   "scripts": {
