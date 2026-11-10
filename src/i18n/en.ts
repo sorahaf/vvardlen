@@ -101,6 +101,7 @@ export const EN: Record<string, string> = {
   'ปรับเส้น': 'Line settings',
   'ความหนาของเส้น': 'Size',
   'ความเข้มสี': 'Paint amount',
+  'ความทึบ': 'Opacity',
   'เส้นสั่นมากแค่ไหน': 'Wiggle amount',
   'ขนาดเม็ดพิกเซล': 'Pixel size',
   'ลายหยัก': 'Wave shape',

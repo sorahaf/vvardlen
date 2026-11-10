@@ -26,7 +26,7 @@ export async function ensureFirebase(){
 /** ข้อมูลเส้นตามที่เก็บใน Firebase (ชื่อสั้นเพื่อประหยัดที่) */
 export interface StrokeData {
   u: string | null; t: BrushType; c: string; s: number; sd: number; w: number; px: number; a: number; wl: number; sh: WaveShape; p: string;
-  fl?: number; oc?: string; ow?: number; pw?: string; ts?: object | number;
+  fl?: number; op?: number; oc?: string; ow?: number; pw?: string; ts?: object | number;
 }
 function encode(s: Stroke, live: boolean): StrokeData{
   let pts = s.pts;
@@ -40,6 +40,7 @@ function encode(s: Stroke, live: boolean): StrokeData{
     p:p.join(',')
   };
   if (s.type === 'paint') d.fl = r2(clampN(s.flow, .05, 1, .55));
+  if (s.op !== undefined && s.op < 1) d.op = r2(clampN(s.op, .05, 1, 1));
   if (s.type === 'outline'){
     d.oc = /^#[0-9a-f]{6}$/.test(s.oc) ? s.oc : '#2a2420'; d.ow = r2(clampN(s.ow, .05, 100, 3));
     if (Array.isArray(s.pw) && s.pw.length === s.pts.length){
@@ -60,7 +61,7 @@ function decode(d: any): Stroke | null{   // d มาจากฐานข้อ
   if (!pts.length) return null;
   const s: Stroke = {
     type:d.t, color:/^#[0-9a-f]{6}$/.test(d.c) ? d.c : '#2a2420', size:clampN(d.s, .05, 400, 4), seed:clampN(d.sd, -2e9, 2e9, 1)|0,
-    wiggle:clampN(d.w, 0, 10, 2), pixel:clampN(d.px, 2, 200, 6), amp:clampN(d.a, 0, 400, 7), wavelen:clampN(d.wl, 2, 800, 18), flow:clampN(d.fl, .05, 1, .55),
+    wiggle:clampN(d.w, 0, 10, 2), pixel:clampN(d.px, 2, 200, 6), amp:clampN(d.a, 0, 400, 7), wavelen:clampN(d.wl, 2, 800, 18), flow:clampN(d.fl, .05, 1, .55), op:clampN(d.op, .05, 1, 1),
     shape:SHAPES.includes(d.sh) ? d.sh : 'zigzag', uid:typeof d.u === 'string' ? d.u : '',
     oc:/^#[0-9a-f]{6}$/.test(d.oc) ? d.oc : '#2a2420', ow:clampN(d.ow, .05, 100, 3),
     pts:pts.length > 1 ? pts : [pts[0], {x:pts[0].x + .3, y:pts[0].y + .1}], wpts:[], cache:{}

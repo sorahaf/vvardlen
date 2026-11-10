@@ -20,9 +20,9 @@ function saveNow(){
   {
     try {
       const data = {
-        settings:{brush:state.brush, color:state.color, pmode:pk.m, size:state.size, flow:state.flow, wiggle:state.wiggle, pixel:state.pixel, amp:state.amp, wavelen:state.wavelen, shape:state.shape, oc:state.oc, ow:state.ow, tip:state.tip, fps:state.fps, playing:state.playing, paper:state.paper},
+        settings:{brush:state.brush, color:state.color, pmode:pk.m, size:state.size, flow:state.flow, wiggle:state.wiggle, pixel:state.pixel, amp:state.amp, wavelen:state.wavelen, shape:state.shape, op:state.op, oc:state.oc, ow:state.ow, tip:state.tip, fps:state.fps, playing:state.playing, paper:state.paper},
         layers:G.layers.map(l => ({id:l.id, name:l.name, visible:l.visible, opacity:l.opacity})), active:G.activeLayer,
-        strokes:(room.active && room.solo ? room.solo.strokes : G.strokes).map(s => ({type:s.type, color:s.color, size:s.size, seed:s.seed, wiggle:s.wiggle, pixel:s.pixel, amp:s.amp, wavelen:s.wavelen, shape:s.shape, flow:s.flow, oc:s.oc, ow:s.ow, pw:s.pw,
+        strokes:(room.active && room.solo ? room.solo.strokes : G.strokes).map(s => ({type:s.type, color:s.color, size:s.size, seed:s.seed, wiggle:s.wiggle, pixel:s.pixel, amp:s.amp, wavelen:s.wavelen, shape:s.shape, flow:s.flow, op:s.op, oc:s.oc, ow:s.ow, pw:s.pw,
           layer:s.layer, iso:s.iso, isoA:s.isoA,
           pts:s.pts.map(p => [Math.round(p.x*10)/10, Math.round(p.y*10)/10])}))
       };
@@ -43,6 +43,7 @@ export function load(){
   if (SHAPES.includes(S.shape)) state.shape = S.shape;
   if (['ink','white','auto'].includes(S.oc)) state.oc = S.oc;
   if (S.tip === 'taper' || S.tip === 'round') state.tip = S.tip;
+  state.op = clampN(S.op, .05, 1, state.op);
   state.ow = clampN(S.ow, 1, 10, state.ow);
   if (PAPERS[S.paper]) state.paper = S.paper;
   if (typeof S.playing === 'boolean') state.playing = S.playing;
@@ -74,7 +75,7 @@ export function load(){
       type:s.type, color:/^#[0-9a-f]{6}$/.test(s.color) ? s.color : '#2a2420', size:clampN(s.size, .05, 400, 4),
       seed:clampN(s.seed, -2e9, 2e9, 1)|0, wiggle:clampN(s.wiggle, 0, 10, 2), pixel:clampN(s.pixel, 1, 200, 6),
       amp:clampN(s.amp, 0, 400, 7), wavelen:clampN(s.wavelen, 2, 800, 18), shape:SHAPES.includes(s.shape) ? s.shape : 'zigzag',
-      flow:clampN(s.flow, .05, 1, .55), oc:/^#[0-9a-f]{6}$/.test(s.oc) ? s.oc : '#2a2420', ow:clampN(s.ow, .05, 100, 3),
+      flow:clampN(s.flow, .05, 1, .55), op:clampN(s.op, .05, 1, 1), oc:/^#[0-9a-f]{6}$/.test(s.oc) ? s.oc : '#2a2420', ow:clampN(s.ow, .05, 100, 3),
       pts:pts.length > 1 ? pts : resample(pts, 3), wpts:[], cache:{},
       layer:layerOf(s.layer) ? s.layer : G.layers[0].id   // รูปเก่าที่ยังไม่มีเลเยอร์ อยู่เลเยอร์ล่างสุด
     };

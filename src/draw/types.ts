@@ -41,6 +41,7 @@ export interface Stroke {
   wavelen: number;
   shape: WaveShape;
   flow: number;
+  op?: number;            // ความทึบ 0 ถึง 1 (ดินสอ พิกเซล เส้นหยัก) วาดทับกันแล้วเข้มขึ้น
   oc: string;             // สีขอบ (ปากกาขอบ)
   ow: number;             // ความหนาขอบ
   pw?: number[];          // ความหนาแต่ละจุด 0 ถึง 1 (ปากกาขอบแบบปลายแหลม ถ้าไม่มีคือหนาเท่ากันทั้งเส้น)
@@ -61,6 +62,6 @@ export interface Snapshot { strokes: Stroke[]; layers: Layer[]; active: number; 
 export interface State {
   brush: BrushType; color: string; size: number; wiggle: number; pixel: number;
   amp: number; wavelen: number; shape: WaveShape; fps: number; playing: boolean;
-  paper: string; flow: number; oc: OutlineMode; ow: number; tip: OutlineTip;
+  paper: string; flow: number; op: number; oc: OutlineMode; ow: number; tip: OutlineTip;
 }
 export type NumKey = { [K in keyof State]: State[K] extends number ? K : never }[keyof State];

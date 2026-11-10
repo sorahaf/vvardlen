@@ -13,7 +13,7 @@ export const WAVE_FRAMES = 12;  // จำนวนเฟรมของคลื
 
 export const state: State = {
   brush:'pencil', color:'#2a2420', size:4, wiggle:2.2, pixel:6,
-  amp:7, wavelen:18, shape:'zigzag', fps:10, playing:true, paper:'plain', flow:.55, oc:'ink', ow:3, tip:'taper'
+  amp:7, wavelen:18, shape:'zigzag', fps:10, playing:true, paper:'plain', flow:.55, op:1, oc:'ink', ow:3, tip:'taper'
 };
 // ในห้องวาดกับเพื่อน ทุกเครื่องเห็นกระดาษสี่เหลี่ยมจัตุรัสแผ่นเดียวกัน (BOARD x BOARD หน่วย) ย่อขยายให้พอดีจอ
 export const BOARD = 1000;

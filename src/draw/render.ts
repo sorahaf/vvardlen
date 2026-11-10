@@ -11,6 +11,8 @@ export function drawStroke(s: Stroke, live: boolean){
   const g = geom(s, G.bf, G.wf, live);
   G.ctx.save();
   G.ctx.lineCap = 'round'; G.ctx.lineJoin = 'round';
+  const op = s.op ?? 1;
+  G.ctx.globalAlpha = op;
   switch (s.type){
     case 'pencil': {
       const pat = grain(s.color);
@@ -18,7 +20,7 @@ export function drawStroke(s: Stroke, live: boolean){
       if (pat.setTransform) pat.setTransform(new DOMMatrix().translateSelf(G.bf*37, G.bf*23).scaleSelf(1/(G.DPR*viewS()), 1/(G.DPR*viewS())));
       G.ctx.strokeStyle = pat;
       G.ctx.lineWidth = s.size; G.ctx.stroke(g.main!);
-      G.ctx.globalAlpha = .42; G.ctx.lineWidth = Math.max(.8, s.size * .5); G.ctx.stroke(g.ghost!);
+      G.ctx.globalAlpha = .42 * op; G.ctx.lineWidth = Math.max(.8, s.size * .5); G.ctx.stroke(g.ghost!);
       break;
     }
     case 'pixel':

@@ -24,6 +24,7 @@ function newStroke(): Stroke{
   return {
     // ขนาดวัดบนกระดาษ (ไม่ขึ้นกับการซูม) ค่าเดียวกันได้เส้นหนาเท่ากันเสมอ
     type:t, color:state.color, size:(t === 'eraser' ? Math.max(8, state.size*3) : t === 'paint' ? state.size*PAINT_K : t === 'outline' ? state.size*OUTLINE_K : state.size) / G.VS, flow:state.flow,
+    op:(t === 'pencil' || t === 'pixel' || t === 'wave') ? state.op : 1,
     oc:outlineColor(), ow:state.ow / G.VS, tip:state.tip,
     seed:(Math.random()*1e9)|0, wiggle:state.wiggle, pixel:state.pixel / G.VS,
     amp:state.amp / G.VS, wavelen:state.wavelen / G.VS, shape:state.shape, pts:[], wpts:[], cache:{},

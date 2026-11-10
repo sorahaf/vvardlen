@@ -34,7 +34,7 @@ initPersist();
 load();
 buildPaperPicker();
 bindRange('size', 'size'); bindRange('wiggle', 'wiggle', v => v.toFixed(1)); bindRange('pixel', 'pixel');
-bindRange('flow', 'flow', v => Math.round(v * 100) + '%'); bindRange('amp', 'amp'); bindRange('wavelen', 'wavelen'); bindRange('fps', 'fps'); bindRange('ow', 'ow');
+bindRange('flow', 'flow', v => Math.round(v * 100) + '%'); bindRange('op', 'op', v => Math.round(v * 100) + '%'); bindRange('amp', 'amp'); bindRange('wavelen', 'wavelen'); bindRange('fps', 'fps'); bindRange('ow', 'ow');
 renderPalette(); setColor(state.color); setBrush(state.brush); setShape(state.shape); setOc(state.oc); setTip(state.tip); setPlaying(state.playing);
 document.querySelectorAll<HTMLElement>('.paper').forEach(b => b.classList.toggle('on', b.dataset.paper === state.paper));
 resize(); renderLayerList(); updateUI(); updateRoomUI(); updateZoomUI(); autoJoin();
