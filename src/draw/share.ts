@@ -7,7 +7,7 @@ import { setPaper } from './paper.js';
 import { toast } from './ui.js';
 import { save } from './persist.js';
 import { fbConfig } from '../shared/firebase.js';
-import { type Artist, ID_RE, MAX_DATA, MAX_THUMB, artLink, loadArt, publishArt } from '../shared/gallery.js';
+import { type Artist, ID_RE, MAX_DATA, MAX_THUMB, artLink, loadArt, publishArt, session } from '../shared/gallery.js';
 
 /* ---------- แชร์รูปไปแกลเลอรี่ และเอารูปจากแกลเลอรี่มาวาดต่อ ---------- */
 const ME = 'yukyik-artist', FROM = 'yukyik-remixfrom';
@@ -93,6 +93,7 @@ async function importRemix(){
     const art = await loadArt(id);
     const pic = art && unpackDrawing(art.d);
     if (!art || !pic){ toast('ไม่พบรูปนี้ อาจถูกลบไปแล้ว'); return; }
+    if (art.owner !== (await session()).uid){ toast('วาดต่อได้เฉพาะรูปของตัวเอง'); return; }
     const room_ = MAX_LAYERS - G.layers.length;
     if (room_ < 1){ toast('มีได้สูงสุด 10 เลเยอร์ ลบเลเยอร์เก่าก่อนนะ'); return; }
     pushHistory();

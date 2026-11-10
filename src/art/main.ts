@@ -56,6 +56,7 @@ async function start(){
   $('#vReport').hidden = !isPublic || art.owner === uid;
   if (reportedSet().has(id)) ($<HTMLButtonElement>('#vReport')).disabled = true;
   $('#vDelete').hidden = art.owner !== uid;
+  $('#vRemix').hidden = art.owner !== uid;   // วาดต่อได้เฉพาะเจ้าของรูป
   if ($('#vReport').hidden && $('#vDelete').hidden) $('.vmore').hidden = true;
   setPlay();
   $('#vBar').hidden = false;

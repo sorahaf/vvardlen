@@ -34,3 +34,4 @@ body.viewer{display:flex;flex-direction:column;height:100dvh}
 .toast{position:fixed;left:50%;bottom:calc(80px + env(safe-area-inset-bottom));transform:translate(-50%,20px);background:var(--ink);color:#fff;border-radius:12px;padding:10px 16px;font-size:14px;opacity:0;pointer-events:none;transition:.25s;z-index:50;max-width:90vw;text-align:center}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 @media (max-width:560px){ #vCopy span{display:none} #vCopy{padding:9px;width:40px;height:40px;justify-content:center} }
+.vbar [hidden]{display:none!important}
