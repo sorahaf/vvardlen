@@ -2,7 +2,7 @@
    {x} คือส่วนที่เปลี่ยนไปได้ เช่น ตัวเลขหรือชื่อ */
 export const EN: Record<string, string> = {
   // ---------- ทั้งสองหน้า ----------
-  'วาดเล่น': 'Wadlen',
+  'วาดเล่น': 'Wardlen',
   'ปิด': 'Close',
   'ส่วนตัว': 'Private',
   'สาธารณะ': 'Public',
@@ -16,7 +16,7 @@ export const EN: Record<string, string> = {
   'รหัสผ่าน': 'Password',
 
   // ---------- หน้ารวมห้อง ----------
-  'วาดเล่น สมุดวาดรูปออนไลน์ เส้นที่วาดจะขยับได้เอง วาดคนเดียวหรือเปิดห้องวาดกับเพื่อนก็ได้': 'Wadlen is an online sketchbook where every line wiggles on its own. Draw alone or open a room with a friend.',
+  'วาดเล่น สมุดวาดรูปออนไลน์ เส้นที่วาดจะขยับได้เอง วาดคนเดียวหรือเปิดห้องวาดกับเพื่อนก็ได้': 'Wardlen is an online sketchbook where every line wiggles on its own. Draw alone or open a room with a friend.',
   'วาดคนเดียว': 'Draw alone',
   'สมุดวาดออนไลน์ ฟรี ไม่ต้องสมัคร': 'Free online sketchbook, no sign-up',
   'ชวนเพื่อนมาวาดเล่นกันเถอะ': "Grab a friend and let's doodle!",
@@ -59,7 +59,7 @@ export const EN: Record<string, string> = {
   'หายในอีก {m} นาที': 'Gone in {m} min',
 
   // ---------- กระดานวาด ----------
-  'กระดานวาด | วาดเล่น': 'Board | Wadlen',
+  'กระดานวาด | วาดเล่น': 'Board | Wardlen',
   'สมุดวาดรูปออนไลน์ เส้นที่วาดจะขยับได้เอง มีดินสอ เส้นพิกเซล และเส้นหยัก เลือกกระดาษได้หลายแบบ': 'An online sketchbook where lines wiggle on their own. Pencil, pixel and wavy brushes, plus lots of papers.',
   'เครื่องมือ': 'Tools',
   'กลับหน้าแรก': 'Back to home',

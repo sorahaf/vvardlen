@@ -12,7 +12,7 @@ const outImg = () => $<HTMLImageElement>('#outImg'), dlBtn = () => $<HTMLAnchorE
 function showFormat(f: Format){
   document.querySelectorAll<HTMLElement>('#fmtSeg button').forEach(b => b.classList.toggle('on', b.dataset.f === f));
   $('#copyImg').hidden = f === 'gif';   // คัดลอก GIF ลงคลิปบอร์ดเบราว์เซอร์ส่วนใหญ่ยังไม่รองรับ
-  dlBtn().download = f === 'gif' ? 'wadlen.gif' : 'wadlen.png';
+  dlBtn().download = f === 'gif' ? 'wardlen.gif' : 'wardlen.png';
   if (f === 'png'){ outImg().src = pngUrl; dlBtn().href = pngUrl; $('#gifBusy').hidden = true; return; }
   if (gifUrl){ outImg().src = gifUrl; dlBtn().href = gifUrl; return; }
   if (gifBusy) return;
