@@ -1,0 +1,7 @@
+/* ปุ่มสลับภาษา TH / EN (ใช้ทั้งสองหน้า) */
+.lang-switch{display:inline-flex;align-items:center;gap:2px;padding:3px;border:1.5px solid var(--line,#e4d8c5);background:#fff;border-radius:999px;flex:none}
+.lang-switch button{display:inline-flex;align-items:center;gap:4px;border:0;background:none;font:inherit;font-size:12.5px;font-weight:600;color:var(--muted,#8c8071);
+  padding:4px 10px;border-radius:999px;cursor:pointer;touch-action:manipulation;line-height:1.2}
+.lang-switch button:hover{color:var(--ink,#2a2420)}
+.lang-switch button.on{background:var(--ink,#2a2420);color:#fff}
+.lang-switch svg{width:13px;height:13px;flex:none}

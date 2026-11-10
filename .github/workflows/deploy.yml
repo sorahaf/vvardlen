@@ -1,0 +1,47 @@
+# ทุกครั้งที่อัปโค้ดขึ้น main: แปลง TypeScript เป็น JavaScript แล้วขึ้นเว็บที่ GitHub Pages ให้เอง
+name: ขึ้นเว็บ GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - name: ติดตั้ง TypeScript
+        run: npm install --no-audit --no-fund
+      - name: ตรวจโค้ดและแปลงเป็น JavaScript
+        run: npm run build
+      - name: รวมไฟล์ของเว็บ
+        run: |
+          mkdir _site
+          cp -r index.html draw.html firebase-config.js styles dist _site/
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5
