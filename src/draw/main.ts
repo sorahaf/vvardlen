@@ -6,6 +6,7 @@ import { initInput } from './input.js';
 import { initLayers, renderLayerList } from './layers.js';
 import { bindRange, initUi, setBrush, setColor, setOc, setPlaying, setShape, setTip, updateUI } from './ui.js';
 import { initSaveImage } from './saveImage.js';
+import { initShare } from './share.js';
 import { autoJoin, initRoom, isFramed, updateRoomUI } from './room.js';
 import { initPicker, renderPalette } from './picker.js';
 import { initAdjust } from './adjust.js';
@@ -37,7 +38,7 @@ bindRange('size', 'size'); bindRange('wiggle', 'wiggle', v => v.toFixed(1)); bin
 bindRange('flow', 'flow', v => Math.round(v * 100) + '%'); bindRange('op', 'op', v => Math.round(v * 100) + '%'); bindRange('amp', 'amp'); bindRange('wavelen', 'wavelen'); bindRange('fps', 'fps'); bindRange('ow', 'ow');
 renderPalette(); setColor(state.color); setBrush(state.brush); setShape(state.shape); setOc(state.oc); setTip(state.tip); setPlaying(state.playing);
 document.querySelectorAll<HTMLElement>('.paper').forEach(b => b.classList.toggle('on', b.dataset.paper === state.paper));
-resize(); renderLayerList(); updateUI(); updateRoomUI(); updateZoomUI(); autoJoin();
+resize(); renderLayerList(); updateUI(); updateRoomUI(); updateZoomUI(); autoJoin(); initShare();
 // ปุ่มดาวน์โหลดซ่อนไว้เมื่อเว็บถูกฝังในกรอบของเว็บอื่น เพราะดาวน์โหลดไม่ได้
 $('#dlBtn').hidden = isFramed();
 if (!isFramed()) $('#modal .card p').innerHTML = 'กด “ดาวน์โหลด” เพื่อบันทึก<br>หรือคลิกขวา (กดค้างบนมือถือ) ที่รูปแล้วเลือก “บันทึกรูปภาพ”';

@@ -1,0 +1,23 @@
+/* ---------- แกลเลอรี่ ---------- */
+.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:18px 14px;padding-top:6px}
+.art{background:var(--panel);border:1.5px solid var(--line);border-radius:13px 16px 12px 17px/16px 12px 17px 13px;overflow:hidden;display:flex;flex-direction:column;transition:transform .2s,border-color .15s}
+.art:hover{transform:rotate(-.6deg);border-color:#c9b79c}
+.art:nth-child(even):hover{transform:rotate(.6deg)}
+.art .pic{display:block;aspect-ratio:4/3;background:#f3ece0;position:relative}
+.art .pic img{width:100%;height:100%;object-fit:contain;display:block}
+.art .pic .lock{position:absolute;top:8px;left:8px;background:rgba(42,36,32,.75);color:#fff;font-size:11px;border-radius:999px;padding:2px 8px}
+.art .info{padding:10px 12px 12px;display:flex;align-items:flex-start;gap:8px}
+.art .txt{flex:1;min-width:0}
+.art .t{font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.art .by{font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.heart{display:inline-flex;align-items:center;gap:4px;border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:4px 10px;font:inherit;font-size:13px;cursor:pointer;color:var(--ink);flex:none}
+.heart svg{width:15px;height:15px}
+.heart.on{border-color:#f3a3b4;background:#fff0f3;color:#d6335a}
+.heart.on svg{fill:currentColor}
+.heart:disabled{opacity:.5}
+.more{text-align:center;margin-top:18px}
+.more .btn{display:inline-flex}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translate(-50%,20px);background:var(--ink);color:#fff;border-radius:12px;padding:10px 16px;font-size:14px;opacity:0;pointer-events:none;transition:.25s;z-index:50;max-width:90vw;text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media (max-width:560px){ .gal{grid-template-columns:repeat(2,1fr);gap:12px 10px} .art .info{flex-direction:column} .nav-gal{padding:8px 10px} }
+.more .btn[hidden]{display:none}

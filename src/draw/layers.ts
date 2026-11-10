@@ -74,7 +74,7 @@ export function restoreSnapshot(sn: Snapshot){
   G.dirty = true; layersChanged();
 }
 
-function layersChanged(){
+export function layersChanged(){
   G.dirty = true; G.thumbsDirty = true;
   renderLayerList(); updateUI(); save();
 }
@@ -179,7 +179,7 @@ export function renderLayerList(){
 // รูปตัวอย่างของแต่ละเลเยอร์ อัปเดตไม่บ่อย (ไม่เกินทุกครึ่งวินาที) จะได้ไม่หนักเครื่อง
 
 export function updateThumbs(now: number){
-  if (!G.thumbsDirty || G.current || room.active || now - G.thumbsAt < 500 || $('#layerPop').hidden) return;   // วาดรูปตัวอย่างเฉพาะตอนเปิดกล่องเลเยอร์
+  if (!G.thumbsDirty || G.current || room.active || now - G.thumbsAt < 500 || !document.querySelector('#layerPop:not([hidden])')) return;   // วาดรูปตัวอย่างเฉพาะตอนเปิดกล่องเลเยอร์
   G.thumbsDirty = false; G.thumbsAt = now;
   const k = Math.min(112 / Math.max(1, G.W), 80 / Math.max(1, G.H)), keep = G.layers;   // ย่อทั้งหน้าให้พอดีกรอบ
   for (const th of document.querySelectorAll<HTMLCanvasElement>('#layerList .lthumb')){

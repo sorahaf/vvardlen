@@ -357,3 +357,20 @@ section h2,.fold-head h2{display:inline-block;color:var(--ink);font-size:12.5px;
   -webkit-mask:linear-gradient(90deg,#000 0 0) center/calc(100% - 8px) 100% no-repeat,conic-gradient(from 45deg at 0 50%,#000 25%,transparent 0) 0 0/4px 6px repeat-y,conic-gradient(from -135deg at 100% 50%,#000 25%,transparent 0) 100% 0/4px 6px repeat-y;
           mask:linear-gradient(90deg,#000 0 0) center/calc(100% - 8px) 100% no-repeat,conic-gradient(from 45deg at 0 50%,#000 25%,transparent 0) 0 0/4px 6px repeat-y,conic-gradient(from -135deg at 100% 50%,#000 25%,transparent 0) 100% 0/4px 6px repeat-y}
 @media (prefers-reduced-motion:reduce){.tool:not(.on):hover,.tool:active,.btn:active{transform:none}}
+
+/* ---------- แชร์ไปแกลเลอรี่ ---------- */
+.card .bar{flex-wrap:wrap}
+.share-btn{border-color:var(--accent);color:var(--accent)}
+.share-card{width:min(440px,100%);overflow:auto}
+.share-form{display:flex;flex-direction:column;gap:10px}
+.share-img{align-self:center;max-height:150px!important;max-width:100%}
+.field{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--muted)}
+.field input,.artist-row input{border:1.5px solid var(--line);border-radius:10px;padding:9px 11px;font:inherit;font-size:14px;color:var(--ink);background:#fff;min-width:0}
+.field input:focus,.artist-row input:focus{outline:none;border-color:var(--ink)}
+.artist-row{display:grid;grid-template-columns:1fr 1.3fr;gap:6px}
+.artist-row[hidden]{display:none}
+.share-card .note{margin:0;font-size:12px;line-height:1.5}
+.share-card .msg{background:#fff1ec;color:#a3361b;border-radius:10px;padding:9px 12px;font-size:13px}
+.share-card .msg[hidden]{display:none}
+.share-card .pk-link{align-self:flex-start}
+@media (max-width:480px){.artist-row{grid-template-columns:1fr}}

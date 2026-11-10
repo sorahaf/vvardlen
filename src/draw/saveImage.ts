@@ -1,4 +1,4 @@
-import { $, BOARD, G, inkC, paperC, room } from './core.js';
+import { $, G, frame, inkC, paperC } from './core.js';
 import { render } from './render.js';
 import { drawPaper } from './paper.js';
 import { toast } from './ui.js';
@@ -31,19 +31,25 @@ function showFormat(f: Format){
 }
 function closeSaveModal(){ $('#modal').classList.remove('show'); }
 
+/** ภาพที่เห็นบนจอที่ขนาดปกติ (ไม่สนการซูม) รวมกระดาษ ในห้องเอาเฉพาะกระดาษสี่เหลี่ยมของห้อง */
+export function captureCanvas(){
+  // บันทึกที่ขนาดปกติเสมอ ไม่ว่าตอนนี้ซูมอยู่แค่ไหน แล้วค่อยคืนมุมมองเดิม
+  const saved: [number, number, number] = [G.ZOOM, G.PX, G.PY];
+  G.ZOOM = 1; G.PX = 0; G.PY = 0;
+  drawPaper(); render();
+  // ในห้องบันทึกเฉพาะกระดาษสี่เหลี่ยมของห้อง ไม่เอาพื้นที่หรี่รอบ ๆ
+  const sx = Math.round(G.OX*G.DPR), sy = Math.round(G.OY*G.DPR);
+  const F = frame(), sw = F ? Math.round(F.w*G.VS*G.DPR) : paperC.width, sh = F ? Math.round(F.h*G.VS*G.DPR) : paperC.height;
+  const c = document.createElement('canvas'); c.width = sw; c.height = sh;
+  const g = c.getContext('2d')!;
+  g.drawImage(paperC, sx, sy, sw, sh, 0, 0, sw, sh); g.drawImage(inkC, sx, sy, sw, sh, 0, 0, sw, sh);
+  [G.ZOOM, G.PX, G.PY] = saved; G.paperDirty = true; G.dirty = true;
+  return c;
+}
+
 export function initSaveImage(){
   $('#saveBtn').addEventListener('click', () => {
-    // บันทึกที่ขนาดปกติเสมอ ไม่ว่าตอนนี้ซูมอยู่แค่ไหน แล้วค่อยคืนมุมมองเดิม
-    const saved: [number, number, number] = [G.ZOOM, G.PX, G.PY];
-    G.ZOOM = 1; G.PX = 0; G.PY = 0;
-    drawPaper(); render();
-    // ในห้องบันทึกเฉพาะกระดาษสี่เหลี่ยมของห้อง ไม่เอาพื้นที่หรี่รอบ ๆ
-    const sx = Math.round(G.OX*G.DPR), sy = Math.round(G.OY*G.DPR);
-    const sw = room.active ? Math.round(BOARD*G.VS*G.DPR) : paperC.width, sh = room.active ? sw : paperC.height;
-    const c = document.createElement('canvas'); c.width = sw; c.height = sh;
-    const g = c.getContext('2d')!;
-    g.drawImage(paperC, sx, sy, sw, sh, 0, 0, sw, sh); g.drawImage(inkC, sx, sy, sw, sh, 0, 0, sw, sh);
-    [G.ZOOM, G.PX, G.PY] = saved; G.paperDirty = true; G.dirty = true;
+    const c = captureCanvas();
     pngUrl = c.toDataURL('image/png');
     lastBlob = null; c.toBlob(b => { lastBlob = b; }, 'image/png');
     gifUrl = null;

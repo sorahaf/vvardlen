@@ -1,4 +1,4 @@
-import { BOARD, BOIL, G, WAVE_FRAMES, inkC, paperC, room, state } from './core.js';
+import { BOIL, G, frame, WAVE_FRAMES, inkC, paperC, room, state } from './core.js';
 import { render } from './render.js';
 import { drawPaper } from './paper.js';
 
@@ -81,7 +81,7 @@ export async function makeGif(onProgress: (p: number) => void): Promise<Blob>{
   const saved: [number, number, number, number, number] = [G.ZOOM, G.PX, G.PY, G.bf, G.wf];
   G.ZOOM = 1; G.PX = 0; G.PY = 0; drawPaper();
   const sx = Math.round(G.OX*G.DPR), sy = Math.round(G.OY*G.DPR);
-  const sw = room.active ? Math.round(BOARD*G.VS*G.DPR) : paperC.width, sh = room.active ? sw : paperC.height;
+  const F = frame(), sw = F ? Math.round(F.w*G.VS*G.DPR) : paperC.width, sh = F ? Math.round(F.h*G.VS*G.DPR) : paperC.height;
   const k = Math.min(1, GIF_MAX / Math.max(sw, sh)), w = Math.max(1, Math.round(sw * k)), h = Math.max(1, Math.round(sh * k));
   const off = document.createElement('canvas'); off.width = w; off.height = h;
   const g = off.getContext('2d', {willReadFrequently:true})!;

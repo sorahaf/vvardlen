@@ -126,7 +126,7 @@ export function buildPaperPicker(){
     b.addEventListener('click', () => setPaper(id));
   }
 }
-function setPaper(id: string){
+export function setPaper(id: string){
   if (!PAPERS[id]) return;
   const wasDark = PAPERS[state.paper].dark, isDark = PAPERS[id].dark;
   state.paper = id;

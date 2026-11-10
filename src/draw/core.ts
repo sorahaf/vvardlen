@@ -62,4 +62,8 @@ export const G = {
   activeLayer: 1,
   thumbsDirty: true,
   thumbsAt: 0,
+  frame: null as { w: number; h: number } | null,   // กรอบรูปตอนดูรูปในแกลเลอรี่ (ไม่ใช่ห้อง)
 };
+
+/** กรอบกระดาษที่ตายตัว: ห้องวาดเป็นสี่เหลี่ยมจัตุรัส ดูรูปในแกลเลอรี่ใช้ขนาดของรูป ส่วนวาดคนเดียวไม่มีกรอบ */
+export const frame = (): { w: number; h: number } | null => room.active ? {w:BOARD, h:BOARD} : G.frame;

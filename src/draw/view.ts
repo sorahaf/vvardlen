@@ -1,4 +1,4 @@
-import { $, BOARD, G, ZMAX, ZMIN, inkC, paperC, room, stage, viewS, viewX, viewY } from './core.js';
+import { $, G, ZMAX, ZMIN, frame, inkC, paperC, stage, viewS, viewX, viewY } from './core.js';
 import { drawPaper } from './paper.js';
 import { gesture } from './input.js';
 
@@ -7,13 +7,14 @@ export function resize(){
   const r = stage.getBoundingClientRect();
   G.W = Math.max(1, Math.round(r.width)); G.H = Math.max(1, Math.round(r.height));
   G.DPR = Math.min(window.devicePixelRatio || 1, 2);
-  if (room.active){
+  const F = frame();
+  if (F){
     const mobile = window.matchMedia('(max-width:760px), (max-height:500px)').matches;
     const land = window.matchMedia('(max-height:500px) and (orientation:landscape)').matches;
     const top = land ? 12 : 64, bottom = mobile && !land ? 86 : 14, left = land ? 76 : 12, right = land ? 64 : 12;
-    G.VS = Math.max(.1, Math.min((G.W - left - right) / BOARD, (G.H - top - bottom) / BOARD));
-    G.OX = left + ((G.W - left - right) - BOARD*G.VS) / 2;
-    G.OY = top + ((G.H - top - bottom) - BOARD*G.VS) / 2;
+    G.VS = Math.max(.01, Math.min((G.W - left - right) / F.w, (G.H - top - bottom) / F.h));
+    G.OX = left + ((G.W - left - right) - F.w*G.VS) / 2;
+    G.OY = top + ((G.H - top - bottom) - F.h*G.VS) / 2;
   } else { G.VS = 1; G.OX = 0; G.OY = 0; }
   for (const c of [paperC, inkC]){ c.width = Math.round(G.W*G.DPR); c.height = Math.round(G.H*G.DPR); }
   clampPan(); drawPaper(); G.dirty = true;
@@ -22,7 +23,7 @@ export function resize(){
 /* ---------- zoom & pan ---------- */
 // ไม่ให้เลื่อนจนกระดาษหลุดจอไปหมด ต้องเห็นอย่างน้อย 80 พิกเซล
 function clampPan(){
-  const S = viewS(), cw = (room.active ? BOARD : G.W / G.VS) * S, ch = (room.active ? BOARD : G.H / G.VS) * S, m = 80;
+  const S = viewS(), F = frame(), cw = (F ? F.w : G.W / G.VS) * S, ch = (F ? F.h : G.H / G.VS) * S, m = 80;
   G.PX = Math.min(G.W - m - G.OX, Math.max(m - G.OX - cw, G.PX));
   G.PY = Math.min(G.H - m - G.OY, Math.max(m - G.OY - ch, G.PY));
 }

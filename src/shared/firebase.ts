@@ -32,7 +32,7 @@ export interface FbDatabase {
   orderByChild(path: string): unknown;
   limitToLast(n: number): unknown;
 }
-interface FbSession { fb: FbDatabase; db: unknown; uid: string; }
+export interface FbSession { fb: FbDatabase; db: unknown; uid: string; }
 
 export function fbConfig(): FirebaseConfig | null {
   const c = window.FIREBASE_CONFIG;

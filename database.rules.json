@@ -194,6 +194,117 @@
           ".validate": false
         }
       }
+    },
+    "art": {
+      "$id": {
+        ".read": "true",
+        ".write": "auth != null && ((!data.exists() && newData.child('owner').val() === auth.uid) || (data.exists() && !newData.exists() && data.child('owner').val() === auth.uid))",
+        ".validate": "$id.matches(/^[A-Za-z0-9_-]{6,30}$/) && newData.hasChildren(['owner','createdAt','title','artists','public','w','h','paper','fps','d'])",
+        "owner": {
+          ".validate": "newData.val() === auth.uid"
+        },
+        "createdAt": {
+          ".validate": "newData.val() === now"
+        },
+        "title": {
+          ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 60"
+        },
+        "artists": {
+          ".validate": "newData.hasChildren(['0'])",
+          "$i": {
+            ".validate": "$i.matches(/^[01]$/) && newData.hasChildren(['n'])",
+            "n": {
+              ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 30"
+            },
+            "c": {
+              ".validate": "newData.isString() && newData.val().length >= 0 && newData.val().length <= 80"
+            },
+            "$other": {
+              ".validate": "false"
+            }
+          }
+        },
+        "public": {
+          ".validate": "newData.isBoolean()"
+        },
+        "w": {
+          ".validate": "newData.isNumber() && newData.val() >= 50 && newData.val() <= 6000"
+        },
+        "h": {
+          ".validate": "newData.isNumber() && newData.val() >= 50 && newData.val() <= 6000"
+        },
+        "paper": {
+          ".validate": "newData.isString() && newData.val().matches(/^[a-z]{1,20}$/)"
+        },
+        "fps": {
+          ".validate": "newData.isNumber() && newData.val() >= 2 && newData.val() <= 24"
+        },
+        "d": {
+          ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 900000"
+        },
+        "from": {
+          ".validate": "newData.isString() && newData.val().matches(/^[A-Za-z0-9_-]{6,30}$/)"
+        },
+        "$other": {
+          ".validate": "false"
+        }
+      }
+    },
+    "gallery": {
+      ".read": "true",
+      ".indexOn": [
+        "createdAt"
+      ],
+      "$id": {
+        ".write": "auth != null && ((!data.exists() && newData.child('owner').val() === auth.uid && newData.parent().parent().child('art/' + $id + '/owner').val() === auth.uid && newData.parent().parent().child('art/' + $id + '/public').val() === true) || (data.exists() && !newData.exists() && data.child('owner').val() === auth.uid))",
+        ".validate": "newData.hasChildren(['owner','createdAt','title','artists','thumb','likes','reports'])",
+        "owner": {
+          ".validate": "data.exists() ? newData.val() === data.val() : (newData.val() === auth.uid)"
+        },
+        "createdAt": {
+          ".validate": "data.exists() ? newData.val() === data.val() : (newData.val() === now)"
+        },
+        "title": {
+          ".validate": "data.exists() ? newData.val() === data.val() : (newData.isString() && newData.val().length >= 1 && newData.val().length <= 60)"
+        },
+        "artists": {
+          ".validate": "data.exists() ? newData.val() === data.val() : (newData.isString() && newData.val().length >= 0 && newData.val().length <= 70)"
+        },
+        "thumb": {
+          ".validate": "data.exists() ? newData.val() === data.val() : (newData.isString() && newData.val().length >= 20 && newData.val().length <= 150000 && newData.val().beginsWith('data:image/'))"
+        },
+        "likes": {
+          ".write": "auth != null && newData.exists() && data.exists()",
+          ".validate": "newData.isNumber() && ((!data.exists() && newData.val() === 0) || (data.exists() && ((newData.val() === data.val() + 1 && !root.child('likes/' + $id + '/' + auth.uid).exists() && newData.parent().parent().parent().child('likes/' + $id + '/' + auth.uid).val() === true) || (newData.val() === data.val() - 1 && root.child('likes/' + $id + '/' + auth.uid).exists() && !newData.parent().parent().parent().child('likes/' + $id + '/' + auth.uid).exists()))))"
+        },
+        "reports": {
+          ".write": "auth != null && newData.exists() && data.exists()",
+          ".validate": "newData.isNumber() && ((!data.exists() && newData.val() === 0) || (data.exists() && newData.val() === data.val() + 1 && !root.child('reports/' + $id + '/' + auth.uid).exists() && newData.parent().parent().parent().child('reports/' + $id + '/' + auth.uid).val() === true))"
+        },
+        "$other": {
+          ".validate": "false"
+        }
+      }
+    },
+    "likes": {
+      "$id": {
+        ".read": "auth != null",
+        ".write": "auth != null && !newData.exists() && root.child('art/' + $id + '/owner').val() === auth.uid",
+        "$uid": {
+          ".write": "auth != null && $uid === auth.uid && root.child('gallery/' + $id).exists()",
+          ".validate": "newData.val() === true"
+        }
+      }
+    },
+    "reports": {
+      "$id": {
+        ".write": "auth != null && !newData.exists() && root.child('art/' + $id + '/owner').val() === auth.uid",
+        "$uid": {
+          ".read": "auth != null && $uid === auth.uid",
+          ".write": "auth != null && $uid === auth.uid && !data.exists() && root.child('gallery/' + $id).exists()",
+          ".validate": "newData.val() === true"
+        }
+      }
     }
   }
 }

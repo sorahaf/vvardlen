@@ -1,4 +1,4 @@
-import { BOARD, BOIL, G, WAVE_FRAMES, inkC, mainCtx, room, state, viewS, viewX, viewY } from './core.js';
+import { BOIL, G, WAVE_FRAMES, frame, inkC, mainCtx, room, state, viewS, viewX, viewY } from './core.js';
 import { drawOutlineRun, geom, grain, planStrokes, strokeRibbon } from './geometry.js';
 import { drawPaint, drawPaintImage } from './paint.js';
 import { PAPERS, drawPaper } from './paper.js';
@@ -46,27 +46,28 @@ export function render(){
   G.ctx.clearRect(0, 0, inkC.width, inkC.height);
   const S = viewS();
   G.ctx.setTransform(G.DPR*S, 0, 0, G.DPR*S, G.DPR*viewX(), G.DPR*viewY());
+  const F = frame();
   if (!room.active){
     renderLayers(mainCtx, [G.DPR*S, 0, 0, G.DPR*S, G.DPR*viewX(), G.DPR*viewY()], inkC.width, inkC.height, scratchPool, true);
     G.ctx = mainCtx;
-    return;
-  }
-  G.ctx.save(); G.ctx.beginPath(); G.ctx.rect(0, 0, BOARD, BOARD); G.ctx.clip();
-  const seq = G.current ? G.strokes.concat([G.current]) : G.strokes, liveSet = new Set(G.current ? [G.current] : []);
-  for (const it of planStrokes(seq, liveSet)){
-    if (it.run) drawOutlineRun(it.run, it.erasers!, liveSet); else drawStroke(it.s!, it.s === G.current);
-  }
-  if (room.active) for (const s of room.live.values()) drawStroke(s, true);
-  if (room.active){
+  } else {
+    G.ctx.save(); G.ctx.beginPath(); G.ctx.rect(0, 0, F!.w, F!.h); G.ctx.clip();
+    const seq = G.current ? G.strokes.concat([G.current]) : G.strokes, liveSet = new Set(G.current ? [G.current] : []);
+    for (const it of planStrokes(seq, liveSet)){
+      if (it.run) drawOutlineRun(it.run, it.erasers!, liveSet); else drawStroke(it.s!, it.s === G.current);
+    }
+    for (const s of room.live.values()) drawStroke(s, true);
     G.ctx.restore();
-    // หรี่พื้นที่นอกกระดาษของห้อง และตีกรอบให้เห็นขอบ
+  }
+  if (F){
+    // หรี่พื้นที่นอกกรอบกระดาษ และตีกรอบให้เห็นขอบ
     G.ctx.setTransform(G.DPR, 0, 0, G.DPR, 0, 0);
-    const bw = BOARD*S, bx = viewX(), by = viewY();
-    G.ctx.beginPath(); G.ctx.rect(0, 0, G.W, G.H); G.ctx.rect(bx, by, bw, bw);
+    const bw = F.w*S, bh = F.h*S, bx = viewX(), by = viewY();
+    G.ctx.beginPath(); G.ctx.rect(0, 0, G.W, G.H); G.ctx.rect(bx, by, bw, bh);
     G.ctx.fillStyle = PAPERS[state.paper].dark ? 'rgba(0,0,0,.35)' : 'rgba(60,40,20,.13)';
     G.ctx.fill('evenodd');
     G.ctx.strokeStyle = PAPERS[state.paper].dark ? 'rgba(255,255,255,.35)' : 'rgba(42,36,32,.35)';
-    G.ctx.setLineDash([6, 5]); G.ctx.lineWidth = 1.2; G.ctx.strokeRect(bx + .5, by + .5, bw - 1, bw - 1); G.ctx.setLineDash([]);
+    G.ctx.setLineDash([6, 5]); G.ctx.lineWidth = 1.2; G.ctx.strokeRect(bx + .5, by + .5, bw - 1, bh - 1); G.ctx.setLineDash([]);
   }
 }
 let lastKey = '';

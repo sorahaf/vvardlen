@@ -30,11 +30,11 @@ jobs:
       - name: รวมไฟล์ของเว็บ
         run: |
           mkdir _site
-          cp -r index.html draw.html firebase-config.js styles dist _site/
+          cp -r index.html draw.html gallery.html art.html firebase-config.js styles dist _site/
           # ใส่เลขเวอร์ชันท้ายไฟล์ เบราว์เซอร์จะได้ไม่ใช้ไฟล์เก่าที่จำไว้
           V=${GITHUB_SHA::8}
           find _site/dist -name '*.js' -exec sed -i -E "s#(from '\./[^']+\.js)'#\1?v=$V'#g; s#(import '\.\./[^']+\.js)'#\1?v=$V'#g; s#(from '\.\./[^']+\.js)'#\1?v=$V'#g" {} +
-          sed -i -E "s#(src=\"dist/[^\"]+\.js)\"#\1?v=$V\"#; s#(href=\"styles/[^\"]+\.css)\"#\1?v=$V\"#g; s#(src=\"firebase-config\.js)\"#\1?v=$V\"#" _site/index.html _site/draw.html
+          sed -i -E "s#(src=\"dist/[^\"]+\.js)\"#\1?v=$V\"#; s#(href=\"styles/[^\"]+\.css)\"#\1?v=$V\"#g; s#(src=\"firebase-config\.js)\"#\1?v=$V\"#" _site/*.html
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v5
         with:
